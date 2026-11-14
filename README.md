@@ -31,13 +31,13 @@ Abrir la carpeta en Android Studio (*File > Open*), esperar el Gradle Sync y com
 
 ## Ramas
 
-| Rama | Modulo | Carpeta permitida |
-| ----- | ----- | ----- |
-| `Main` | Integracion | Todo, solo via Pull Request |
-| `feature/Modulo1` | 1. Core, Motor Clinico y Simulador | `core/`, `ui/`, `features/simulator/`, `MainActivity.kt` |
-| `feature/Modulo2` | 2. Anatomia Interactiva y HUD | `features/dashboard/`, `res/drawable/` |
-| `feature/Modulo3` | 3. Captura Guiada y Test PVT | `features/assessment/` |
-| `feature/Modulo4` | 4. Diagnostico, Contramedidas y Graficas | `features/countermeasures/` |
+| Rama | Modulo | Responsable | Carpeta permitida |
+| ----- | ----- | ----- | ----- |
+| `Main` | Integracion | Carlos | Todo, solo via Pull Request |
+| `feature/Modulo1` | 1. Core, Motor Clinico y Simulador | Carlos | `core/`, `ui/`, `features/simulator/`, `MainActivity.kt` |
+| `feature/Modulo2` | 2. Anatomia Interactiva y HUD | Emir | `features/dashboard/`, `res/drawable/` |
+| `feature/Modulo3` | 3. Captura Guiada y Test PVT | Elias | `features/assessment/` |
+| `feature/Modulo4` | 4. Diagnostico, Contramedidas y Graficas | Arturo | `features/countermeasures/` |
 
 Reglas (Blueprint, secciones 4, 8 y 9):
 

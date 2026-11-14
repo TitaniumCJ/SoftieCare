@@ -2,7 +2,7 @@
 
 | Metadato | Valor | 
 | ----- | ----- | 
-| **Versión** | v1.5.0 | 
+| **Versión** | v1.5.1 | 
 | **Estado** | Activo | 
 | **Última actualización** | 2026-11-14 | 
 | **Autor** | Carlos Alberto Jaime Mascareño | 
@@ -19,6 +19,7 @@
 | v1.4.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Corrección de ruta completa en comando `git restore` de Fase 2, guarda `if (currentMood > target)` en `recordPvtResult` para evitar lecturas duplicadas en `history7Days` y nota de prueba manual para `THORAX_CARDIO` en Fase 3. | 
 | v1.4.2 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Alineacion de `targetSdk` y `compileSdk` a 37 en la seccion 3 segun el proyecto generado por la plantilla de Android Studio. | 
 | v1.5.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nuevas secciones 1.1 (Alcance y supuestos), 1.2 (Requisitos) y 1.3 (Trabajo futuro): captura manual, umbrales heuristicos, `MOOD` como estado conductual, PVT de un intento, contramedida como simplificacion, entorno sin efecto en umbrales y justificacion Offline-First por `DISTANCE`. Las secciones 3, 4.1, 4.3 y 10 referencian 1.1 y 1.2 en lugar de repetir el contenido. Redaccion impersonal en textos de interfaz. Ramas `Main` y `feature/Modulo<N>` en secciones 8 y 9. | 
+| v1.5.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nombres de los responsables de los Modulos 2, 3 y 4 en la seccion 2. | 
 
 ## 0. Introducción
 
@@ -84,9 +85,9 @@ Esta seccion define que hace el sistema. El como se construye en Android se defi
 | \# | Módulo / Interfaz | Paquete (`com.softiecare.app...`) | Responsable | Alcance técnico principal | 
 | ----- | ----- | ----- | ----- | ----- | 
 | 1 | Core, Motor Clínico & Simulador | `core.model`, `core.data`, `features.simulator` | Carlos Alberto Jaime Mascareño | Scaffolding inicial, entidades base, función `evaluateLevel` en `HealthRepository`, estado reactivo (`StateFlow`) y diálogo de inyección de escenarios (`SimulatorSheet`). | 
-| 2 | Anatomía Interactiva & HUD Principal | `features.dashboard` (+ `res/drawable`) | Integrante 2 | Pantalla principal dividida: silueta humana en 3 zonas interactivas, lista lateral de los 6 indicadores y selector visual de entorno. Único responsable de agregar recursos nuevos en `res/drawable`. | 
-| 3 | Captura Guiada & Test PVT | `features.assessment` | Integrante 3 | Formulario guiado paso a paso con validación numérica y de rango, confirmación visual simulada de adjunto de imagen y minijuego de tiempo de reacción (PVT). | 
-| 4 | Diagnóstico, Contramedidas & Gráficas | `features.countermeasures` | Integrante 4 | Vista de detalle clínico: relación con los peligros del HRP, gráfica de las últimas 7 lecturas en `Canvas` y ejecución de contramedida. | 
+| 2 | Anatomía Interactiva & HUD Principal | `features.dashboard` (+ `res/drawable`) | Integrante 2: Emir Alexander Alcantar Martinez | Pantalla principal dividida: silueta humana en 3 zonas interactivas, lista lateral de los 6 indicadores y selector visual de entorno. Único responsable de agregar recursos nuevos en `res/drawable`. | 
+| 3 | Captura Guiada & Test PVT | `features.assessment` | Integrante 3: Elias Tamayo Salcedo | Formulario guiado paso a paso con validación numérica y de rango, confirmación visual simulada de adjunto de imagen y minijuego de tiempo de reacción (PVT). | 
+| 4 | Diagnóstico, Contramedidas & Gráficas | `features.countermeasures` | Integrante 4: Arturo Rafael Cornejo Escobar | Vista de detalle clínico: relación con los peligros del HRP, gráfica de las últimas 7 lecturas en `Canvas` y ejecución de contramedida. | 
 
 ## 3. Stack tecnológico
 
