@@ -2,7 +2,7 @@
 
 | Metadato | Valor | 
 | ----- | ----- | 
-| **Versión** | v1.5.2 | 
+| **Versión** | v1.5.3 | 
 | **Estado** | Activo | 
 | **Última actualización** | 2026-11-14 | 
 | **Autor** | Carlos Alberto Jaime Mascareño | 
@@ -21,6 +21,7 @@
 | v1.5.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nuevas secciones 1.1 (Alcance y supuestos), 1.2 (Requisitos) y 1.3 (Trabajo futuro): captura manual, umbrales heuristicos, `MOOD` como estado conductual, PVT de un intento, contramedida como simplificacion, entorno sin efecto en umbrales y justificacion Offline-First por `DISTANCE`. Las secciones 3, 4.1, 4.3 y 10 referencian 1.1 y 1.2 en lugar de repetir el contenido. Redaccion impersonal en textos de interfaz. Ramas `Main` y `feature/Modulo<N>` en secciones 8 y 9. | 
 | v1.5.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nombres de los responsables de los Modulos 2, 3 y 4 en la seccion 2. | 
 | v1.5.2 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Eliminacion de horarios en la seccion 8 (renombrada a Fases de trabajo). | 
+| v1.5.3 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Tabla de lectura de los cortes de `evaluateLevel` en la seccion 4.3 y referencia a `docs/guia_datos.md`. | 
 
 ## 0. Introducción
 
@@ -286,6 +287,19 @@ fun evaluateLevel(id: String, v: Float): StatusLevel = when (id) {
 }
 
 ```
+
+**Lectura de los cortes** (misma regla que el codigo anterior; `v` = valor capturado):
+
+| `id` | `NORMAL` (estable) | `WARNING` (precaucion) | `CRITICAL` (malo) | 
+| ----- | ----- | ----- | ----- | 
+| `BP_SYS` | 95 ≤ v < 130 | 90 ≤ v < 95 o 130 ≤ v < 140 | v < 90 o v ≥ 140 | 
+| `HEART_RATE` | 60 ≤ v ≤ 90 | 50 ≤ v < 60 o 90 < v ≤ 105 | v < 50 o v > 105 | 
+| `GLUCOSE` | 70 ≤ v < 100 | 60 ≤ v < 70 o 100 ≤ v ≤ 125 | v < 60 o v > 125 | 
+| `TEMP` | 36.1 ≤ v < 37.3 | 35.5 ≤ v < 36.1 o 37.3 ≤ v < 38.0 | v < 35.5 o v ≥ 38.0 | 
+| `SLEEP` | 7.0 ≤ v ≤ 9.0 | 5.5 ≤ v < 7.0 o 9.0 < v ≤ 10.0 | v < 5.5 o v > 10.0 | 
+| `MOOD` | v ≥ 4.0 | 2.5 ≤ v < 4.0 | v < 2.5 | 
+
+Los datos de prueba para cada nivel estan en `docs/guia_datos.md`.
 
 **Comportamiento exacto de los métodos en `HealthRepository`:**
 

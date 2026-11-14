@@ -14,6 +14,8 @@ App Android (Kotlin + Jetpack Compose) de autoevaluacion medica Offline-First pa
 
 La fuente unica de verdad es [`docs/blueprint_softiecare.md`](docs/blueprint_softiecare.md). Leerlo completo antes de escribir codigo.
 
+Valores para probar cada nivel (estable, precaucion, malo): [`docs/guia_datos.md`](docs/guia_datos.md).
+
 ## Requisitos
 
 - Android Studio reciente con `compileSdk 37` instalado (SDK Manager)
