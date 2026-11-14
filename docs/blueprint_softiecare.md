@@ -2,7 +2,7 @@
 
 | Metadato | Valor | 
 | ----- | ----- | 
-| **Versión** | v1.5.3 | 
+| **Versión** | v1.6.0 | 
 | **Estado** | Activo | 
 | **Última actualización** | 2026-11-14 | 
 | **Autor** | Carlos Alberto Jaime Mascareño | 
@@ -22,6 +22,7 @@
 | v1.5.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nombres de los responsables de los Modulos 2, 3 y 4 en la seccion 2. | 
 | v1.5.2 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Eliminacion de horarios en la seccion 8 (renombrada a Fases de trabajo). | 
 | v1.5.3 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Tabla de lectura de los cortes de `evaluateLevel` en la seccion 4.3 y referencia a `docs/guia_datos.md`. | 
+| v1.6.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Componente compartido `ProcedureAnimation` (seccion 6) y dependencia `lottie-compose` para animaciones de procedimiento (seccion 3). | 
 
 ## 0. Introducción
 
@@ -101,6 +102,7 @@ Esta seccion define que hace el sistema. El como se construye en Android se defi
 | **Estado y Persistencia** | `StateFlow` en `HealthRepository` (Singleton en memoria con *Seed Data*) | Garantiza velocidad de desarrollo y cero fallos de migración SQL durante la demostración. | 
 | **Visualización — Gráficas** | `Canvas` nativo de Jetpack Compose | Dibuja la tendencia de `history7Days` sin librerías externas. | 
 | **Visualización — Cuerpo** | Bloques táctiles en Compose (`Box`/`Canvas`) o 3 `VectorDrawable` separados | Un vector único no permite clic ni coloreado por región fácilmente; se usan 3 contenedores interactivos (uno por `BodyZone`) coloreados con `StatusNormal`, `StatusWarning` o `StatusCritical`. | 
+| **Animaciones de procedimiento** | `com.airbnb.android:lottie-compose` 6.7.1 + archivos JSON en `app/src/main/assets/lottie/` | Animaciones de LottieFiles bajo la Lottie Simple License (uso libre, credito recomendado en `app/src/main/assets/lottie/README.md`). Se empaquetan en la app, sin red. | 
 | **Backend / Red / Auth** | Ninguno (100% Offline-First) | Requisito arquitectónico derivado de `SpaceHazard.DISTANCE` (ver sección 1.1). | 
 
 ## 4. Estructura del repositorio
@@ -354,6 +356,8 @@ Entregados en el *scaffolding* inicial para mantener consistencia visual:
 * `HazardTag(hazard: SpaceHazard)`: Chip informativo que muestra cuál de los 5 peligros del HRP está asociado al indicador.
 
 * `PrimaryActionButton(text: String, onClick: () -> Unit)`: Botón de alto contraste para confirmar mediciones o protocolos médicos.
+
+* `ProcedureAnimation(indicatorId: String, modifier: Modifier = Modifier)`: Animacion Lottie en ciclo que muestra como realizar la medicion del indicador. Carga `app/src/main/assets/lottie/<id en minusculas>.json` (ej. `bp_sys.json`); si el archivo no existe no dibuja nada.
 
 ## 7. Guía de diseño (Design Tokens)
 
