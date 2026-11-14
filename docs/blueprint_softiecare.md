@@ -2,7 +2,7 @@
 
 | Metadato | Valor | 
 | ----- | ----- | 
-| **Versión** | v1.5.1 | 
+| **Versión** | v1.5.2 | 
 | **Estado** | Activo | 
 | **Última actualización** | 2026-11-14 | 
 | **Autor** | Carlos Alberto Jaime Mascareño | 
@@ -20,6 +20,7 @@
 | v1.4.2 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Alineacion de `targetSdk` y `compileSdk` a 37 en la seccion 3 segun el proyecto generado por la plantilla de Android Studio. | 
 | v1.5.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nuevas secciones 1.1 (Alcance y supuestos), 1.2 (Requisitos) y 1.3 (Trabajo futuro): captura manual, umbrales heuristicos, `MOOD` como estado conductual, PVT de un intento, contramedida como simplificacion, entorno sin efecto en umbrales y justificacion Offline-First por `DISTANCE`. Las secciones 3, 4.1, 4.3 y 10 referencian 1.1 y 1.2 en lugar de repetir el contenido. Redaccion impersonal en textos de interfaz. Ramas `Main` y `feature/Modulo<N>` en secciones 8 y 9. | 
 | v1.5.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nombres de los responsables de los Modulos 2, 3 y 4 en la seccion 2. | 
+| v1.5.2 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Eliminacion de horarios en la seccion 8 (renombrada a Fases de trabajo). | 
 
 ## 0. Introducción
 
@@ -358,9 +359,9 @@ Toda la interfaz utiliza modo oscuro estricto de alto contraste. Ningún archivo
 
 * `TextSecondary` (`0xFF94A3B8`): Etiquetas secundarias y unidades de medida.
 
-## 8. Cronograma operativo: Qué hacer cuándo y en todo momento
+## 8. Fases de trabajo
 
-### Fase 1: Alineación y Scaffolding (Sábado 10:00 AM – 10:45 AM)
+### Fase 1: Alineación y Scaffolding
 
 * **Carlos Alberto Jaime Mascareño (Módulo 1):** Inicializa el proyecto en Android Studio (`minSdk 26`), configura GitHub y sube el *scaffolding* completo: `Color.kt`, `Theme.kt`, `Type.kt`, `SharedComponents.kt`, `HealthModels.kt`, `HealthRepository.kt` (con 7 elementos semilla variados dentro del rango normal en cada `history7Days`), un stub de `SimulatorSheet.kt` y el esqueleto de `MainActivity.kt`. Verifica que una `@Preview` simple renderice correctamente consumiendo `HealthRepository`.
 
@@ -370,13 +371,13 @@ Toda la interfaz utiliza modo oscuro estricto de alto contraste. Ningún archivo
 
 * **Integrante 4 (Módulo 4):** Diseña el componente `TrendLineChart` con `Canvas` y la vista `CountermeasureDetailScreen.kt`.
 
-### Fase 2: Desarrollo de Módulos en Aislamiento (Sábado 10:45 AM – 04:30 PM)
+### Fase 2: Desarrollo de Módulos en Aislamiento
 
 * Cada integrante desarrolla su pantalla en la rama `feature/Modulo<N>` de su módulo (tabla de ramas en `README.md`).
 
 * **Regla de aislamiento:** Nadie hace commit de cambios en `MainActivity.kt` durante esta fase. Para probar cada pantalla se utiliza `@Preview` en Android Studio (o, si se edita temporalmente `MainActivity.kt` para probar en el emulador, se debe revertir antes de hacer commit ejecutando desde la raíz del repositorio: `git restore app/src/main/java/com/softiecare/app/MainActivity.kt`).
 
-### Fase 3: Integración del Ciclo "Evaluate & Act" (Sábado 04:30 PM – 09:00 PM)
+### Fase 3: Integración del Ciclo "Evaluate & Act"
 
 * Se hace *merge* de las 4 ramas y Carlos Alberto Jaime Mascareño conecta las pantallas en `MainActivity.kt`.
 
@@ -390,11 +391,9 @@ Toda la interfaz utiliza modo oscuro estricto de alto contraste. Ningún archivo
 
   4. Presionar "Confirmar Contramedida Ejecutada" y comprobar que el valor regrese a `normalValue` y el color a `StatusNormal`.
 
-### Fase 4: Pulido, Expansiones Opcionales y Demo Freeze (Domingo 08:00 AM – Hora límite de entrega oficial)
+### Fase 4: Pulido, Expansiones Opcionales y Demo Freeze
 
-* Definir en equipo la hora exacta de cierre de entregas de su sede local del hackathon.
-
-* **3 horas antes de la hora oficial de entrega:** Congelación total de código (*Code Freeze*), generación del APK instalable de respaldo y grabación del video de demostración.
+* **Antes de la entrega:** Congelación total de código (*Code Freeze*), generación del APK instalable de respaldo y grabación del video de demostración.
 
 ## 9. Requisitos técnicos comunes (Checklist para los 4 módulos)
 
