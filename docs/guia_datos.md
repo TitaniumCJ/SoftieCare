@@ -2,7 +2,7 @@
 
 Valores para probar y demostrar la app. Los rangos de cada nivel estan en el Blueprint, seccion 4.3 (tabla "Lectura de los cortes"); esta guia solo dice que capturar y que resultado esperar.
 
-Niveles: `NORMAL` = estable (verde), `WARNING` = precaucion (amarillo), `CRITICAL` = malo (rojo).
+Niveles internos y lo que muestra la app: `NORMAL` = "ESTABLE" (verde), `WARNING` = "NO OPTIMO" (amarillo), `CRITICAL` = "CRITICO" (rojo). Excepcion: en `MOOD`, `CRITICAL` se muestra como "NO OPTIMO" (Blueprint 1.1).
 
 Los datos son simulados y los cortes son heuristicos (Blueprint 1.1).
 

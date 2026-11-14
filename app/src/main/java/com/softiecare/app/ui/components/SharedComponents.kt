@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.softiecare.app.core.model.SpaceHazard
 import com.softiecare.app.core.model.StatusLevel
+import com.softiecare.app.core.model.VitalIndicator
 import com.softiecare.app.ui.theme.SpaceBackground
 import com.softiecare.app.ui.theme.StatusCritical
 import com.softiecare.app.ui.theme.StatusNormal
@@ -31,6 +32,17 @@ fun statusColor(level: StatusLevel): Color = when (level) {
     StatusLevel.WARNING -> StatusWarning
     StatusLevel.CRITICAL -> StatusCritical
 }
+
+fun statusLabel(level: StatusLevel): String = when (level) {
+    StatusLevel.NORMAL -> "ESTABLE"
+    StatusLevel.WARNING -> "NO OPTIMO"
+    StatusLevel.CRITICAL -> "CRITICO"
+}
+
+// Nivel que se muestra en pantalla (Blueprint 1.1): MOOD nunca se presenta como critico
+fun displayLevel(indicator: VitalIndicator): StatusLevel =
+    if (indicator.id == "MOOD" && indicator.level == StatusLevel.CRITICAL) StatusLevel.WARNING
+    else indicator.level
 
 @Composable
 fun SpaceCard(
@@ -63,7 +75,7 @@ fun StatusBadge(level: StatusLevel) {
         shape = RoundedCornerShape(50)
     ) {
         Text(
-            text = level.name,
+            text = statusLabel(level),
             color = SpaceBackground,
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.labelMedium,
