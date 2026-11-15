@@ -2,7 +2,7 @@
 
 | Metadato | Valor | 
 | ----- | ----- | 
-| **Versión** | v1.5.3 | 
+| **Versión** | v1.7.0 | 
 | **Estado** | Activo | 
 | **Última actualización** | 2026-11-14 | 
 | **Autor** | Carlos Alberto Jaime Mascareño | 
@@ -22,6 +22,9 @@
 | v1.5.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nombres de los responsables de los Modulos 2, 3 y 4 en la seccion 2. | 
 | v1.5.2 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Eliminacion de horarios en la seccion 8 (renombrada a Fases de trabajo). | 
 | v1.5.3 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Tabla de lectura de los cortes de `evaluateLevel` en la seccion 4.3 y referencia a `docs/guia_datos.md`. | 
+| v1.6.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Componente compartido `ProcedureAnimation` (seccion 6) y dependencia `lottie-compose` para animaciones de procedimiento (seccion 3). | 
+| v1.6.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Regla de presentacion de niveles en 1.1 (ESTABLE / NO OPTIMO / CRITICO, `MOOD` nunca critico), `statusLabel` y `displayLevel` en la seccion 6 y requisito de uso en la seccion 9. | 
+| v1.7.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Rediseño visual: `IndicatorTile`, `SpaceCard` con borde neutro, `StatusBadge` con texto blanco sobre fondos `Status*Strong` (secciones 6 y 7). Dashboard en cuadricula de 2 columnas con `IndicatorTile` y zonas con `displayLevel` (cambio coordinado con el Modulo 2). Pruebas unitarias de `HealthRepository` en `app/src/test`. | 
 
 ## 0. Introducción
 
@@ -50,6 +53,8 @@ Una vez que cada integrante identifique su módulo en la sección 2, trabajará 
 * **Contramedida:** Confirmar la ejecucion de una contramedida restaura el indicador a su valor nominal como simplificacion de la demostracion. En uso real, el tripulante vuelve a medir el indicador despues de ejecutar el protocolo y el sistema clasifica la nueva lectura.
 
 * **Entorno operativo:** El entorno seleccionado (transito a Marte en 0 g, base lunar o rover presurizado) es contexto operativo visual. En esta version no modifica los umbrales de clasificacion (ver 1.3).
+
+* **Presentacion de niveles:** La interfaz muestra los niveles como "ESTABLE" (`NORMAL`), "NO OPTIMO" (`WARNING`) y "CRITICO" (`CRITICAL`). Para no reforzar un estado de animo bajo, `MOOD` nunca se presenta como "CRITICO": su nivel `CRITICAL` se muestra como "NO OPTIMO" y la lista principal no resalta su valor numerico. "CRITICO" queda para los indicadores fisicos. La clasificacion interna de la seccion 4.3 no cambia.
 
 * **Offline-First por el peligro `DISTANCE`:** Lejos de la Tierra, la comunicacion sufre retrasos de varios minutos en una mision a Marte y perdidas temporales de enlace, por lo que no se puede depender de telemedicina en tiempo real. Por esa razon el sistema opera al 100% sin red y la evaluacion se realiza de forma autonoma a bordo.
 
@@ -101,6 +106,7 @@ Esta seccion define que hace el sistema. El como se construye en Android se defi
 | **Estado y Persistencia** | `StateFlow` en `HealthRepository` (Singleton en memoria con *Seed Data*) | Garantiza velocidad de desarrollo y cero fallos de migración SQL durante la demostración. | 
 | **Visualización — Gráficas** | `Canvas` nativo de Jetpack Compose | Dibuja la tendencia de `history7Days` sin librerías externas. | 
 | **Visualización — Cuerpo** | Bloques táctiles en Compose (`Box`/`Canvas`) o 3 `VectorDrawable` separados | Un vector único no permite clic ni coloreado por región fácilmente; se usan 3 contenedores interactivos (uno por `BodyZone`) coloreados con `StatusNormal`, `StatusWarning` o `StatusCritical`. | 
+| **Animaciones de procedimiento** | `com.airbnb.android:lottie-compose` 6.7.1 + archivos JSON en `app/src/main/assets/lottie/` | Animaciones de LottieFiles bajo la Lottie Simple License (uso libre, credito recomendado en `app/src/main/assets/lottie/README.md`). Se empaquetan en la app, sin red. | 
 | **Backend / Red / Auth** | Ninguno (100% Offline-First) | Requisito arquitectónico derivado de `SpaceHazard.DISTANCE` (ver sección 1.1). | 
 
 ## 4. Estructura del repositorio
@@ -347,13 +353,19 @@ Los datos de prueba para cada nivel estan en `docs/guia_datos.md`.
 
 Entregados en el *scaffolding* inicial para mantener consistencia visual:
 
-* `SpaceCard(statusLevel: StatusLevel, onClick: (() -> Unit)?, content: @Composable () -> Unit)`: Contenedor con fondo `SurfacePanel` y borde coloreado según el estado.
+* `SpaceCard(statusLevel: StatusLevel, onClick: (() -> Unit)?, content: @Composable () -> Unit)`: Contenedor con fondo `SurfacePanel` y borde neutro. El estado se comunica solo con `StatusBadge`; `statusLevel` se conserva para no romper la firma.
 
-* `StatusBadge(level: StatusLevel)`: Etiqueta semántica (`NORMAL`, `WARNING`, `CRITICAL`).
+* `StatusBadge(level: StatusLevel)`: Etiqueta semántica con el texto de `statusLabel(level)` ("ESTABLE", "NO OPTIMO" o "CRITICO") en blanco sobre `statusContainerColor(level)`.
+
+* `IndicatorTile(indicator: VitalIndicator, onClick: () -> Unit, modifier: Modifier = Modifier, onMeasure: (() -> Unit)? = null)`: Cuadro grande con el nombre, el valor en grande con su unidad y `StatusBadge(displayLevel(indicator))`. En `MOOD` no muestra el valor numerico (1.1). Lo usa la cuadricula de 2 columnas del Dashboard.
+
+* `displayLevel(indicator: VitalIndicator): StatusLevel`: Nivel que se muestra en pantalla segun la regla de presentacion de 1.1 (`MOOD` en `CRITICAL` se muestra como `WARNING`). Se usa para etiquetas, bordes y colores de zona en lugar de `indicator.level`.
 
 * `HazardTag(hazard: SpaceHazard)`: Chip informativo que muestra cuál de los 5 peligros del HRP está asociado al indicador.
 
 * `PrimaryActionButton(text: String, onClick: () -> Unit)`: Botón de alto contraste para confirmar mediciones o protocolos médicos.
+
+* `ProcedureAnimation(indicatorId: String, modifier: Modifier = Modifier)`: Animacion Lottie en ciclo que muestra como realizar la medicion del indicador. Carga `app/src/main/assets/lottie/<id en minusculas>.json` (ej. `bp_sys.json`); si el archivo no existe no dibuja nada.
 
 ## 7. Guía de diseño (Design Tokens)
 
@@ -372,6 +384,8 @@ Toda la interfaz utiliza modo oscuro estricto de alto contraste. Ningún archivo
 * `TextPrimary` (`0xFFF8FAFC`): Texto principal blanco hueso.
 
 * `TextSecondary` (`0xFF94A3B8`): Etiquetas secundarias y unidades de medida.
+
+* `StatusNormalStrong` (`0xFF15803D`), `StatusWarningStrong` (`0xFFB45309`), `StatusCriticalStrong` (`0xFFC62828`): Fondos de `StatusBadge` con texto blanco (contraste de al menos 5:1). Los colores `Status*` brillantes se usan en lineas, graficas y zonas de la silueta.
 
 ## 8. Fases de trabajo
 
@@ -418,6 +432,8 @@ Cada módulo entregado debe cumplir con lo siguiente antes de hacer Pull Request
 * Uso exclusivo de los colores de `ui/theme/Color.kt` (`StatusNormal`, `StatusWarning`, `StatusCritical`) y componentes de `ui/components/SharedComponents.kt`.
 
 * Respeto exacto a las firmas de funciones definidas en la sección 4.2.
+
+* Toda etiqueta o color de nivel en pantalla usa `displayLevel(indicator)` (sección 6), no `indicator.level` directo.
 
 * Validación de entrada en `AssessmentScreen`: convertir con `toFloatOrNull()` y verificar que el valor esté dentro del rango válido de captura de la tabla 4.3 (ej. no permitir números negativos, y restringir `"MOOD"` a `1.0f..5.0f` y `"SLEEP"` a `0.0f..24.0f`) antes de invocar `HealthRepository.updateIndicatorValue(id, floatValue)`.
 

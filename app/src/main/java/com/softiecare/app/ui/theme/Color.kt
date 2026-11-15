@@ -9,3 +9,8 @@ val StatusWarning = Color(0xFFFFEA00)
 val StatusCritical = Color(0xFFFF1744)
 val TextPrimary = Color(0xFFF8FAFC)
 val TextSecondary = Color(0xFF94A3B8)
+
+// Fondos de etiqueta de estado: tonos oscuros para que el texto blanco se lea (contraste >= 5:1)
+val StatusNormalStrong = Color(0xFF15803D)
+val StatusWarningStrong = Color(0xFFB45309)
+val StatusCriticalStrong = Color(0xFFC62828)
