@@ -2,7 +2,7 @@
 
 | Metadato | Valor | 
 | ----- | ----- | 
-| **Versión** | v1.7.0 | 
+| **Versión** | v1.7.1 | 
 | **Estado** | Activo | 
 | **Última actualización** | 2026-11-14 | 
 | **Autor** | Carlos Alberto Jaime Mascareño | 
@@ -25,6 +25,7 @@
 | v1.6.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Componente compartido `ProcedureAnimation` (seccion 6) y dependencia `lottie-compose` para animaciones de procedimiento (seccion 3). | 
 | v1.6.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Regla de presentacion de niveles en 1.1 (ESTABLE / NO OPTIMO / CRITICO, `MOOD` nunca critico), `statusLabel` y `displayLevel` en la seccion 6 y requisito de uso en la seccion 9. | 
 | v1.7.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Rediseño visual: `IndicatorTile`, `SpaceCard` con borde neutro, `StatusBadge` con texto blanco sobre fondos `Status*Strong` (secciones 6 y 7). Dashboard en cuadricula de 2 columnas con `IndicatorTile` y zonas con `displayLevel` (cambio coordinado con el Modulo 2). Pruebas unitarias de `HealthRepository` en `app/src/test`. | 
+| v1.7.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Integracion de Fase 3 en `Main` (Modulos 1, 3 y 4): `displayLevel` en captura, PVT y detalle; textos impersonales y aviso "Salida en falso — reintentar" en el PVT; navegacion con `rememberSaveable` para conservar la pantalla al girar; tema de ventana oscuro sin destello blanco; icono propio de la app (`ic_launcher_*`, actualizado por el lider durante la integracion). | 
 
 ## 0. Introducción
 

@@ -12,7 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.softiecare.app.features.assessment.AssessmentScreen
@@ -22,12 +22,11 @@ import com.softiecare.app.features.dashboard.DashboardScreen
 import com.softiecare.app.features.simulator.SimulatorSheet
 import com.softiecare.app.ui.theme.SoftieCareTheme
 
-private sealed interface Screen {
-    object Dashboard : Screen
-    data class Assessment(val indicatorId: String) : Screen
-    object PvtTest : Screen
-    data class CountermeasureDetail(val indicatorId: String) : Screen
-}
+// Rutas como texto para que rememberSaveable las conserve al girar la pantalla
+private const val DASHBOARD = "dashboard"
+private const val PVT = "pvt"
+private const val ASSESSMENT = "assessment:"
+private const val DETAIL = "detail:"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,12 +42,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun SoftieCareApp() {
-    var currentScreen by remember { mutableStateOf<Screen>(Screen.Dashboard) }
-    var showSimulator by remember { mutableStateOf(false) }
-    val goBack = { currentScreen = Screen.Dashboard }
+    var route by rememberSaveable { mutableStateOf(DASHBOARD) }
+    var showSimulator by rememberSaveable { mutableStateOf(false) }
+    val goBack = { route = DASHBOARD }
 
     // El boton atras del sistema regresa al Dashboard en lugar de cerrar la app
-    BackHandler(enabled = currentScreen != Screen.Dashboard) { goBack() }
+    BackHandler(enabled = route != DASHBOARD) { goBack() }
 
     Scaffold { innerPadding ->
         Box(
@@ -56,16 +55,18 @@ private fun SoftieCareApp() {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            when (val screen = currentScreen) {
-                Screen.Dashboard -> DashboardScreen(
-                    onIndicatorClick = { id -> currentScreen = Screen.CountermeasureDetail(id) },
-                    onOpenAssessment = { id -> currentScreen = Screen.Assessment(id) },
-                    onOpenPvtTest = { currentScreen = Screen.PvtTest },
+            when {
+                route.startsWith(ASSESSMENT) ->
+                    AssessmentScreen(indicatorId = route.removePrefix(ASSESSMENT), onBack = goBack)
+                route.startsWith(DETAIL) ->
+                    CountermeasureDetailScreen(indicatorId = route.removePrefix(DETAIL), onBack = goBack)
+                route == PVT -> PvtTestScreen(onBack = goBack)
+                else -> DashboardScreen(
+                    onIndicatorClick = { id -> route = DETAIL + id },
+                    onOpenAssessment = { id -> route = ASSESSMENT + id },
+                    onOpenPvtTest = { route = PVT },
                     onOpenSimulator = { showSimulator = true }
                 )
-                is Screen.Assessment -> AssessmentScreen(indicatorId = screen.indicatorId, onBack = goBack)
-                Screen.PvtTest -> PvtTestScreen(onBack = goBack)
-                is Screen.CountermeasureDetail -> CountermeasureDetailScreen(indicatorId = screen.indicatorId, onBack = goBack)
             }
         }
     }

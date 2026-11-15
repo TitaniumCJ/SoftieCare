@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.SoftieCare" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Tema oscuro desde el arranque para evitar el destello blanco antes de Compose -->
+    <style name="Theme.SoftieCare" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/space_background</item>
+    </style>
 </resources>

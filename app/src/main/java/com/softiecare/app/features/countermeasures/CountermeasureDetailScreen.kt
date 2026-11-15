@@ -38,6 +38,7 @@ import com.softiecare.app.ui.components.PrimaryActionButton
 import com.softiecare.app.ui.components.SpaceCard
 import com.softiecare.app.ui.components.StatusBadge
 import com.softiecare.app.ui.components.statusColor
+import com.softiecare.app.ui.components.displayLevel
 import com.softiecare.app.ui.theme.SoftieCareTheme
 import com.softiecare.app.ui.theme.SpaceBackground
 import com.softiecare.app.ui.theme.StatusCritical
@@ -92,11 +93,11 @@ private fun HeaderSection(indicator: VitalIndicator) {
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-                StatusBadge(level = indicator.level)
+                StatusBadge(level = displayLevel(indicator))
             }
             Text(
                 text = "${formatValue(indicator.currentValue)} ${indicator.unit}",
-                color = statusColor(indicator.level),
+                color = statusColor(displayLevel(indicator)),
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold
             )

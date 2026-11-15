@@ -35,6 +35,7 @@ import com.softiecare.app.ui.components.HazardTag
 import com.softiecare.app.ui.components.PrimaryActionButton
 import com.softiecare.app.ui.components.SpaceCard
 import com.softiecare.app.ui.components.StatusBadge
+import com.softiecare.app.ui.components.displayLevel
 import com.softiecare.app.ui.theme.SpaceBackground
 import com.softiecare.app.ui.theme.StatusCritical
 import com.softiecare.app.ui.theme.StatusNormal
@@ -100,7 +101,7 @@ fun AssessmentScreen(indicatorId: String, onBack: () -> Unit) {
                     Spacer(Modifier.height(8.dp))
                     Text("${indicator.currentValue} ${indicator.unit}", color = TextPrimary, fontSize = 32.sp)
                     Spacer(Modifier.height(8.dp))
-                    StatusBadge(level = indicator.level)
+                    StatusBadge(level = displayLevel(indicator))
                 }
             }
             Spacer(Modifier.height(24.dp))
@@ -120,7 +121,7 @@ fun AssessmentScreen(indicatorId: String, onBack: () -> Unit) {
                     Text(guide[step], color = TextPrimary, fontSize = 18.sp)
                 } else {
                     Text(
-                        "Ingresa el valor medido (${indicator.unit})",
+                        "Valor medido (${indicator.unit})",
                         color = TextPrimary,
                         fontSize = 18.sp
                     )
@@ -186,7 +187,7 @@ fun AssessmentScreen(indicatorId: String, onBack: () -> Unit) {
                     val parsed = input.trim().replace(',', '.').toFloatOrNull()
                     val range = captureRanges[indicatorId]
                     error = when {
-                        parsed == null -> "Ingresa un número válido"
+                        parsed == null -> "Valor no numérico"
                         range == null -> "Indicador sin rango de captura definido"
                         parsed !in range -> // tambien rechaza NaN e Infinity
                             "Fuera de rango: ${range.start}–${range.endInclusive} ${indicator.unit}"

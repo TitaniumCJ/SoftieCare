@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.softiecare.app.core.data.HealthRepository
 import com.softiecare.app.ui.components.PrimaryActionButton
 import com.softiecare.app.ui.components.StatusBadge
+import com.softiecare.app.ui.components.displayLevel
 import com.softiecare.app.ui.theme.SpaceBackground
 import com.softiecare.app.ui.theme.StatusCritical
 import com.softiecare.app.ui.theme.StatusNormal
@@ -117,8 +118,8 @@ fun PvtTestScreen(onBack: () -> Unit) {
                     )
                     Spacer(Modifier.height(16.dp))
                     Text(
-                        "Cuando la pantalla se ponga verde, tócala lo más rápido posible. " +
-                            "Si tocas antes de tiempo, el intento se reinicia.",
+                        "Al ponerse verde la pantalla, tocarla lo más rápido posible. " +
+                            "Un toque antes de tiempo reinicia el intento.",
                         color = TextSecondary,
                         textAlign = TextAlign.Center
                     )
@@ -136,7 +137,7 @@ fun PvtTestScreen(onBack: () -> Unit) {
                 )
 
                 PvtPhase.FalseStart -> Text(
-                    "Salida en falso — intenta de nuevo",
+                    "Salida en falso — reintentar",
                     color = TextPrimary,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
@@ -152,9 +153,10 @@ fun PvtTestScreen(onBack: () -> Unit) {
                     )
                     Spacer(Modifier.height(16.dp))
                     if (mood != null) {
-                        Text("Estado de ánimo: ${mood.currentValue} ${mood.unit}", color = TextSecondary)
+                        // Blueprint 1.1: sin valor numerico del animo y nunca "CRITICO"
+                        Text(mood.name, color = TextSecondary)
                         Spacer(Modifier.height(8.dp))
-                        StatusBadge(level = mood.level)
+                        StatusBadge(level = displayLevel(mood))
                     }
                     Spacer(Modifier.height(32.dp))
                     PrimaryActionButton(text = "Repetir prueba", onClick = { phase = PvtPhase.Waiting })
