@@ -46,7 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softiecare.app.core.data.HealthRepository
 import com.softiecare.app.core.model.VitalIndicator
+import com.softiecare.app.ui.components.AnimatedEmoji
 import com.softiecare.app.ui.components.AppIcons
+import com.softiecare.app.ui.components.Emoji
 import com.softiecare.app.ui.components.BackPill
 import com.softiecare.app.ui.components.StatusBadge
 import com.softiecare.app.ui.components.StepAnimation
@@ -59,7 +61,6 @@ import com.softiecare.app.ui.theme.StatusNormal
 import com.softiecare.app.ui.theme.SurfacePanel
 import com.softiecare.app.ui.theme.TextPrimary
 import com.softiecare.app.ui.theme.TextSecondary
-import java.util.Locale
 
 // Copy of the "Valid capture range" column in Blueprint table 4.3
 private val captureRanges: Map<String, ClosedFloatingPointRange<Float>> = mapOf(
@@ -142,10 +143,9 @@ fun AssessmentScreen(indicatorId: String, onBack: () -> Unit) {
                     indicatorId = indicator.id,
                     stepIndex = step,
                     accent = accent,
-                    displayText = displayValue(indicator.normalValue, indicator.unit),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(210.dp)
                 )
                 Spacer(Modifier.height(16.dp))
                 Text(
@@ -311,7 +311,7 @@ private fun SavedCard(indicator: VitalIndicator, accent: Color, showValue: Boole
             Modifier.padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(AppIcons.CheckCircle, contentDescription = null, tint = accent, modifier = Modifier.size(64.dp))
+            AnimatedEmoji(codepoint = Emoji.CHECK, modifier = Modifier.size(96.dp))
             Spacer(Modifier.height(12.dp))
             Text("Reading saved", color = TextPrimary, fontWeight = FontWeight.Bold, fontSize = 20.sp)
             if (showValue) {
@@ -323,9 +323,6 @@ private fun SavedCard(indicator: VitalIndicator, accent: Color, showValue: Boole
         }
     }
 }
-
-private fun displayValue(v: Float, unit: String): String =
-    if (v >= 100f) String.format(Locale.US, "%.0f %s", v, unit) else String.format(Locale.US, "%.1f %s", v, unit)
 
 @Preview
 @Composable

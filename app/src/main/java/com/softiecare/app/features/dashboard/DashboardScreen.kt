@@ -42,6 +42,7 @@ import com.softiecare.app.core.model.SpaceEnvironment
 import com.softiecare.app.core.model.StatusLevel
 import com.softiecare.app.core.model.VitalIndicator
 import com.softiecare.app.ui.components.AppIcons
+import com.softiecare.app.ui.components.AppLogo
 import com.softiecare.app.ui.components.EnvironmentScene
 import com.softiecare.app.ui.components.PrimaryActionButton
 import com.softiecare.app.ui.components.StatusBadge
@@ -97,6 +98,8 @@ fun DashboardScreen(
 @Composable
 private fun Header(onOpenSimulator: () -> Unit, onOpenAbout: () -> Unit) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        AppLogo(size = 48.dp)
+        Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text("Crew health monitoring", color = TextSecondary, style = MaterialTheme.typography.bodySmall)
             Text(

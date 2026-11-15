@@ -2,6 +2,13 @@ package com.softiecare.app.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
+import com.softiecare.app.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -328,5 +335,25 @@ fun BackPill(accent: Color, text: String = "Back", onClick: () -> Unit) {
         Icon(AppIcons.Back, contentDescription = null, tint = accent)
         Spacer(Modifier.width(8.dp))
         Text(text, fontWeight = FontWeight.Bold)
+    }
+}
+
+// SoftieCare logo: the launcher icon foreground (orbit and heart) cropped to a circle
+@Composable
+fun AppLogo(size: Dp = 48.dp, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .size(size)
+            .clip(CircleShape)
+            .background(SpaceBackground)
+            .border(1.dp, TextSecondary.copy(alpha = 0.35f), CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        // The 108dp foreground keeps its art inside the central ~62dp, so it is drawn larger and clipped
+        Image(
+            painter = painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = "SoftieCare logo",
+            modifier = Modifier.requiredSize(size * 1.6f)
+        )
     }
 }

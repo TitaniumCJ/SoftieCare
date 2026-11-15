@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.softiecare.app.ui.components.AppLogo
 import com.softiecare.app.ui.components.BackPill
 import com.softiecare.app.ui.theme.SoftieCareTheme
 import com.softiecare.app.ui.theme.SpaceBackground
@@ -49,6 +50,7 @@ fun AboutScreen(onBack: () -> Unit) {
     ) {
         BackPill(accent = StatusNormal, onClick = onBack)
 
+        AppLogo(size = 88.dp)
         Column {
             Text("SoftieCare", color = TextPrimary, fontSize = 28.sp, fontWeight = FontWeight.Bold)
             Text(
@@ -109,7 +111,7 @@ fun AboutScreen(onBack: () -> Unit) {
         }
 
         Text(
-            "Icons: Material Symbols (Apache 2.0)",
+            "Icons: Material Symbols (Apache 2.0). Animated emoji: Noto Emoji Animation by Google (CC BY 4.0).",
             color = TextSecondary,
             style = MaterialTheme.typography.bodySmall
         )

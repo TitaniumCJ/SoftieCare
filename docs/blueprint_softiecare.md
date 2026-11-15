@@ -2,7 +2,7 @@
 
 | Field | Value | 
 | ----- | ----- | 
-| **Version** | v2.1.0 | 
+| **Version** | v2.2.0 | 
 | **Status** | Active | 
 | **Last updated** | 2026-11-14 | 
 | **Author** | Carlos Alberto Jaime Mascareño | 
@@ -26,6 +26,7 @@
 | v1.9.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | The countermeasure no longer fixes the indicator instantly: guided plan (`CountermeasurePlanScreen`) ending with a mandatory new measurement. `applyCountermeasure` removed. Shared `BackPill` button. | 
 | v2.0.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Whole app, code comments and documentation in English (the challenge is presented to NASA). Re-measure reminder notification (RF-12, `RemeasureReminder`). `docs/guia_datos.md` renamed to `docs/data_guide.md`. | 
 | v2.1.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | About screen with the demo disclaimer and team (FR-13, `features.about`), opened from the info button on the Today tab. Countermeasure plan steps announced as checkboxes by screen readers. | 
+| v2.2.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Step animations replaced by Noto Emoji Animation Lottie files (CC BY 4.0, credited on the About screen); `ProcedureAnimation` removed. App logo (`AppLogo`) on the Today header and the About screen. | 
 
 ## 0. Introduction
 
@@ -108,9 +109,9 @@ This section defines what the system does. How it is built on Android is defined
 | **Routing / Navigation** | State-based navigation (`when (route)`) + Material 3 `NavigationBar` with 4 tabs + `showSimulator` boolean in `MainActivity.kt` | No external navigation dependency and no route errors when integrating the 4 branches. `SimulatorSheet` is an `AlertDialog` controlled by its own `Boolean` (keeping the `SimulatorSheet` name so the agreed signature does not break). | 
 | **State and persistence** | `StateFlow` in `HealthRepository` (in-memory singleton with seed data) | Fast development and zero SQL migration failures during the demo. | 
 | **Visualization — Charts** | Native Jetpack Compose `Canvas` | Draws the `history7Days` trend without external libraries. | 
-| **Visualization — Environment, icons and step animations** | Compose `Canvas` illustrations and animations; Material Symbols icons (Apache 2.0) defined as `ImageVector` in code | No new dependencies or asset files; works offline. | 
+| **Visualization — Environment and icons** | Compose `Canvas` illustrations; Material Symbols icons (Apache 2.0) defined as `ImageVector` in code | No new dependencies or asset files; works offline. | 
 | **Notifications** | `AlarmManager` (inexact alarm) + `BroadcastReceiver` + `NotificationCompat`; `POST_NOTIFICATIONS` permission on Android 13+ | Local reminders without a network or extra libraries. The inexact alarm needs no special permission; Android may deliver it a few seconds late. | 
-| **Procedure animations (optional)** | `com.airbnb.android:lottie-compose` 6.7.1 + JSON files in `app/src/main/assets/lottie/` | LottieFiles animations under the Lottie Simple License (credit in `app/src/main/assets/lottie/README.md`). Bundled in the app, offline. | 
+| **Step animations** | `com.airbnb.android:lottie-compose` 6.7.1 + Noto Emoji Animation Lottie files in `app/src/main/assets/lottie/emoji/` | Polished animated emoji by Google under CC BY 4.0 (credit on the About screen and in `app/src/main/assets/lottie/README.md`). Bundled in the app, offline. | 
 | **Backend / Network / Auth** | None (100% Offline-First) | Architectural requirement derived from `SpaceHazard.DISTANCE` (see section 1.1). | 
 
 ## 4. Repository structure
@@ -408,13 +409,13 @@ Delivered with the scaffolding and integration to keep the visual design consist
 
 * `HazardTag(hazard: SpaceHazard)`: Informational chip showing which of the 5 HRP hazards is linked to the indicator, with the readable name from `hazardLabel(hazard)`.
 
-* `StepAnimation(indicatorId: String, stepIndex: Int, accent: Color, displayText: String, modifier: Modifier = Modifier)` (`StepAnimation.kt`): Looping `Canvas` animation showing what to do in each step of `measurementGuide`; `stepIndex` equal to the guide size is the value entry step. No files or network needed.
+* `StepAnimation(indicatorId: String, stepIndex: Int, accent: Color, modifier: Modifier = Modifier)` and `AnimatedEmoji(codepoint: String, modifier: Modifier = Modifier)` (`StepAnimation.kt`): Looping Noto animated emoji for each step of `measurementGuide` on a circle in the indicator color; `stepIndex` equal to the guide size is the value entry step.
+
+* `AppLogo(size: Dp = 48.dp, modifier: Modifier = Modifier)`: SoftieCare logo (launcher icon foreground) cropped to a circle. Used on the Today header and the About screen.
 
 * `BackPill(accent: Color, text: String = "Back", onClick: () -> Unit)`: Pill-shaped back button with an arrow and a border in the indicator color.
 
 * `PrimaryActionButton(text: String, onClick: () -> Unit)`: High-contrast button to confirm measurements or medical protocols.
-
-* `ProcedureAnimation(indicatorId: String, modifier: Modifier = Modifier)`: Optional looping Lottie animation. Loads `app/src/main/assets/lottie/<lowercase id>.json` (e.g. `bp_sys.json`); draws nothing if the file does not exist.
 
 ## 7. Design guide (design tokens)
 
