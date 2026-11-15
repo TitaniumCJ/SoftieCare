@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,8 +45,8 @@ import com.softiecare.app.core.model.SpaceEnvironment
 import com.softiecare.app.core.model.StatusLevel
 import com.softiecare.app.core.model.VitalIndicator
 import com.softiecare.app.ui.components.PrimaryActionButton
-import com.softiecare.app.ui.components.SpaceCard
-import com.softiecare.app.ui.components.StatusBadge
+import com.softiecare.app.ui.components.IndicatorTile
+import com.softiecare.app.ui.components.displayLevel
 import com.softiecare.app.ui.components.statusColor
 import com.softiecare.app.ui.theme.SoftieCareTheme
 import com.softiecare.app.ui.theme.SpaceBackground
@@ -188,8 +190,8 @@ private fun ZoneBlock(
     onIndicatorClick: (String) -> Unit
 ) {
     // El enum esta ordenado NORMAL < WARNING < CRITICAL, por eso el maximo es el peor estado de la zona
-    val worst = indicators.filter { it.bodyZone == zone }.maxByOrNull { it.level }
-    val level = worst?.level ?: StatusLevel.NORMAL
+    val worst = indicators.filter { it.bodyZone == zone }.maxByOrNull { displayLevel(it) }
+    val level = worst?.let { displayLevel(it) } ?: StatusLevel.NORMAL
     val color = statusColor(level)
 
     Box(
@@ -218,22 +220,26 @@ private fun IndicatorList(
     onOpenPvtTest: () -> Unit,
     modifier: Modifier
 ) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        indicators.forEach { indicator ->
-            SpaceCard(statusLevel = indicator.level, onClick = { onIndicatorClick(indicator.id) }) {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Column(Modifier.weight(1f)) {
-                        Text(text = indicator.name, color = TextPrimary, fontWeight = FontWeight.SemiBold)
-                        Text(
-                            text = "${indicator.currentValue} ${indicator.unit}",
-                            color = TextSecondary
-                        )
-                    }
-                    StatusBadge(level = indicator.level)
-                    TextButton(onClick = { onOpenAssessment(indicator.id) }) {
-                        Text(text = "Medir", color = TextPrimary)
-                    }
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        // Cuadricula de 2 columnas con cuadros grandes (IndicatorTile)
+        indicators.chunked(2).forEach { pair ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                pair.forEach { indicator ->
+                    IndicatorTile(
+                        indicator = indicator,
+                        onClick = { onIndicatorClick(indicator.id) },
+                        onMeasure = { onOpenAssessment(indicator.id) },
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                    )
                 }
+                if (pair.size == 1) Spacer(Modifier.weight(1f))
             }
         }
         Spacer(Modifier.height(8.dp))
