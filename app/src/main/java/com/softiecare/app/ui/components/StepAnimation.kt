@@ -46,6 +46,9 @@ object Emoji {
     const val SMILE = "1f642"
     const val THUMBS_UP = "1f44d"
     const val CHECK = "2705"
+    const val ROCKET = "1f680"
+    const val EARTH = "1f30d"
+    const val SPARKLES = "2728"
 }
 
 // One animation per step of each measurement guide; stepIndex == guide size is the value entry step

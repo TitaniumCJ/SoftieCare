@@ -2,7 +2,7 @@
 
 | Field | Value | 
 | ----- | ----- | 
-| **Version** | v2.2.0 | 
+| **Version** | v2.3.0 | 
 | **Status** | Active | 
 | **Last updated** | 2026-11-14 | 
 | **Author** | Carlos Alberto Jaime Mascareño | 
@@ -27,6 +27,7 @@
 | v2.0.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Whole app, code comments and documentation in English (the challenge is presented to NASA). Re-measure reminder notification (RF-12, `RemeasureReminder`). `docs/guia_datos.md` renamed to `docs/data_guide.md`. | 
 | v2.1.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | About screen with the demo disclaimer and team (FR-13, `features.about`), opened from the info button on the Today tab. Countermeasure plan steps announced as checkboxes by screen readers. | 
 | v2.2.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Step animations replaced by Noto Emoji Animation Lottie files (CC BY 4.0, credited on the About screen); `ProcedureAnimation` removed. App logo (`AppLogo`) on the Today header and the About screen. | 
+| v2.3.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Environment banners repainted with gradients, shading and animated details (twinkling stars, beacon, dust) plus animated emoji (rocket, Earth, sparkles). | 
 
 ## 0. Introduction
 
@@ -403,7 +404,7 @@ Delivered with the scaffolding and integration to keep the visual design consist
 
 * `indicatorIcon(id: String): ImageVector` and `indicatorAccent(id: String): Color`: Decorative icon (from `AppIcons`) and color per indicator. Status is communicated only by `StatusBadge`.
 
-* `EnvironmentScene(env: SpaceEnvironment, modifier: Modifier = Modifier)` (`EnvironmentScene.kt`): Illustrated banner of the environment (spacecraft with Mars in the distance, lunar base with Earth, rover on Mars). `environmentBrush(env)` provides the app background tint.
+* `EnvironmentScene(env: SpaceEnvironment, modifier: Modifier = Modifier)` (`EnvironmentScene.kt`): Illustrated banner of the environment (animated rocket with a shaded Mars, lunar habitat with the animated Earth, rover on Martian dunes), painted in `Canvas` with gradients and animated details plus Noto animated emoji. `environmentBrush(env)` provides the app background tint.
 
 * `displayLevel(indicator: VitalIndicator): StatusLevel`: Level shown on screen according to the presentation rule in 1.1 (`MOOD` in `CRITICAL` is shown as `WARNING`). Used for badges, colors and the overall status instead of `indicator.level`.
 
