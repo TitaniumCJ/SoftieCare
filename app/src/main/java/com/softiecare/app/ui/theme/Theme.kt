@@ -17,7 +17,7 @@ private val SoftieCareColors = darkColorScheme(
     onError = TextPrimary
 )
 
-// Modo oscuro estricto: se ignoran el tema del sistema y los colores dinamicos
+// Strict dark mode: system theme and dynamic colors are ignored
 @Composable
 fun SoftieCareTheme(content: @Composable () -> Unit) {
     MaterialTheme(

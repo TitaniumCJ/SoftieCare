@@ -29,11 +29,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softiecare.app.core.data.HealthRepository
-import com.softiecare.app.core.model.BodyZone
 import com.softiecare.app.core.model.SpaceHazard
 import com.softiecare.app.core.model.StatusLevel
 import com.softiecare.app.core.model.VitalIndicator
+import com.softiecare.app.ui.components.BackPill
 import com.softiecare.app.ui.components.HazardTag
+import com.softiecare.app.ui.components.indicatorAccent
 import com.softiecare.app.ui.components.PrimaryActionButton
 import com.softiecare.app.ui.components.SpaceCard
 import com.softiecare.app.ui.components.StatusBadge
@@ -48,7 +49,11 @@ import com.softiecare.app.ui.theme.TextSecondary
 import java.util.Locale
 
 @Composable
-fun CountermeasureDetailScreen(indicatorId: String, onBack: () -> Unit) {
+fun CountermeasureDetailScreen(
+    indicatorId: String,
+    onBack: () -> Unit,
+    onStartCountermeasure: () -> Unit
+) {
     val indicators by HealthRepository.indicators.collectAsState()
     val indicator = indicators.find { it.id == indicatorId }
 
@@ -60,19 +65,17 @@ fun CountermeasureDetailScreen(indicatorId: String, onBack: () -> Unit) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        TextButton(onClick = onBack) {
-            Text("← Volver al panel", color = TextSecondary)
-        }
+        BackPill(accent = indicatorAccent(indicatorId), onClick = onBack)
 
         if (indicator == null) {
-            Text("Indicador no encontrado: $indicatorId", color = StatusCritical)
+            Text("Indicator not found: $indicatorId", color = StatusCritical)
             return@Column
         }
 
         HeaderSection(indicator)
         HazardSection(indicator)
         TrendSection(indicator)
-        CountermeasureSection(indicator)
+        CountermeasureSection(indicator, onStartCountermeasure)
     }
 }
 
@@ -102,11 +105,7 @@ private fun HeaderSection(indicator: VitalIndicator) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Valor nominal: ${formatValue(indicator.normalValue)} ${indicator.unit}",
-                color = TextSecondary
-            )
-            Text(
-                text = "Zona corporal: ${zoneLabel(indicator.bodyZone)}",
+                text = "Nominal value: ${formatValue(indicator.normalValue)} ${indicator.unit}",
                 color = TextSecondary
             )
         }
@@ -120,7 +119,7 @@ private fun HazardSection(indicator: VitalIndicator) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "Peligro HRP asociado",
+                text = "Associated HRP hazard",
                 color = TextPrimary,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
@@ -139,7 +138,7 @@ private fun TrendSection(indicator: VitalIndicator) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "Tendencia — últimas ${values.size} lecturas",
+                text = "Trend — last ${values.size} readings",
                 color = TextPrimary,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
@@ -157,17 +156,17 @@ private fun TrendSection(indicator: VitalIndicator) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Más antigua", color = TextSecondary, style = MaterialTheme.typography.labelSmall)
+                    Text("Oldest", color = TextSecondary, style = MaterialTheme.typography.labelSmall)
                     Text(
-                        text = "Mín ${formatValue(values.min())} · Máx ${formatValue(values.max())} ${indicator.unit}",
+                        text = "Min ${formatValue(values.min())} · Max ${formatValue(values.max())} ${indicator.unit}",
                         color = TextSecondary,
                         style = MaterialTheme.typography.labelSmall
                     )
-                    Text("Más reciente", color = TextSecondary, style = MaterialTheme.typography.labelSmall)
+                    Text("Latest", color = TextSecondary, style = MaterialTheme.typography.labelSmall)
                 }
             }
             Text(
-                text = "Línea punteada: valor nominal",
+                text = "Dashed line: nominal value",
                 color = TextSecondary,
                 style = MaterialTheme.typography.labelSmall
             )
@@ -176,27 +175,24 @@ private fun TrendSection(indicator: VitalIndicator) {
 }
 
 @Composable
-private fun CountermeasureSection(indicator: VitalIndicator) {
+private fun CountermeasureSection(indicator: VitalIndicator, onStart: () -> Unit) {
     SpaceCard(statusLevel = indicator.level, onClick = null) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Protocolo de contramedida",
+                text = "Countermeasure protocol",
                 color = TextPrimary,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
             Text(text = indicator.countermeasureProtocol, color = TextPrimary)
 
-            // Se oculta en NORMAL para no insertar lecturas nominales repetidas en history7Days
+            // The indicator is not corrected here: the plan ends with a new measurement
             if (indicator.level != StatusLevel.NORMAL) {
-                PrimaryActionButton(
-                    text = "Confirmar Contramedida Ejecutada",
-                    onClick = { HealthRepository.applyCountermeasure(indicator.id) }
-                )
+                PrimaryActionButton(text = "Start countermeasure", onClick = onStart)
             } else {
-                Text(text = "Indicador en rango nominal", color = StatusNormal, fontWeight = FontWeight.Bold)
+                Text(text = "Indicator in nominal range", color = StatusNormal, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -246,7 +242,7 @@ fun TrendLineChart(
             style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
         )
 
-        // Cada punto se colorea con su propio nivel para ver en que lectura inicio la alerta
+        // Each point uses its own level color to show which reading triggered the alert
         values.forEachIndexed { i, v ->
             drawCircle(
                 color = statusColor(HealthRepository.evaluateLevel(indicatorId, v)),
@@ -259,29 +255,23 @@ fun TrendLineChart(
 
 private fun formatValue(v: Float): String = String.format(Locale.US, "%.1f", v)
 
-private fun zoneLabel(zone: BodyZone): String = when (zone) {
-    BodyZone.HEAD_MIND -> "Cabeza / Mente"
-    BodyZone.THORAX_CARDIO -> "Tórax / Cardiovascular"
-    BodyZone.METABOLIC_ENDOCRINE -> "Metabólico / Endocrino"
-}
-
 private fun hazardDescription(hazard: SpaceHazard): String = when (hazard) {
     SpaceHazard.RADIATION ->
-        "La radiación espacial puede alterar el sistema inmune y provocar cambios en la temperatura corporal."
+        "Space radiation can disrupt the immune system and cause changes in body temperature."
     SpaceHazard.ISOLATION ->
-        "El aislamiento y confinamiento prolongados afectan la calidad del sueño, el estado de ánimo y el desempeño conductual."
+        "Prolonged isolation and confinement affect sleep quality, mood and behavioral performance."
     SpaceHazard.DISTANCE ->
-        "La distancia a la Tierra impide la telemedicina en tiempo real, por lo que la tripulación debe actuar de forma autónoma."
+        "The distance from Earth prevents real-time telemedicine, so the crew must act autonomously."
     SpaceHazard.GRAVITY ->
-        "Los cambios de gravedad redistribuyen los fluidos corporales y alteran la regulación cardiovascular."
+        "Gravity changes shift body fluids and alter cardiovascular regulation."
     SpaceHazard.HOSTILE_ENVIRONMENT ->
-        "El hábitat cerrado altera la alimentación y el metabolismo, con impacto en la regulación de glucosa."
+        "The closed habitat alters diet and metabolism, affecting glucose regulation."
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFF0B0F19, heightDp = 900)
 @Composable
 private fun CountermeasureDetailScreenPreview() {
     SoftieCareTheme {
-        CountermeasureDetailScreen(indicatorId = "TEMP", onBack = {})
+        CountermeasureDetailScreen(indicatorId = "TEMP", onBack = {}, onStartCountermeasure = {})
     }
 }

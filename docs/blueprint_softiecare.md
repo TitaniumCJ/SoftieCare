@@ -1,162 +1,167 @@
-# Blueprint Técnico — SoftieCare
+# Technical Blueprint — SoftieCare
 
-| Metadato | Valor | 
+| Field | Value | 
 | ----- | ----- | 
-| **Versión** | v1.7.1 | 
-| **Estado** | Activo | 
-| **Última actualización** | 2026-11-14 | 
-| **Autor** | Carlos Alberto Jaime Mascareño | 
+| **Version** | v2.1.0 | 
+| **Status** | Active | 
+| **Last updated** | 2026-11-14 | 
+| **Author** | Carlos Alberto Jaime Mascareño | 
 
-## Historial de cambios
+## Change history
 
-| Versión | Fecha | Autor | Cambios | 
+| Version | Date | Author | Changes | 
 | ----- | ----- | ----- | ----- | 
-| v1.0.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Versión inicial del Blueprint técnico para Android Studio (Kotlin + Jetpack Compose), división en 4 módulos, contrato de datos y cronograma de ejecución. | 
-| v1.1.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Eliminación de entidad redundante `CountermeasureLog`, simplificación de ruteo por estado en lugar de librería externa, adición de firmas exactas de pantallas en sección 4.2 y ajuste de horario del sábado. | 
-| v1.2.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Cambio de `value` a `currentValue: Float` (Presión Sistólica y Ánimo 1–5), reducción de `BodyZone` a 3 zonas con mapeo y umbrales explícitos en sección 4.3, `enum class Scenario`, método `recordPvtResult`, eliminación de `requiresFlightSurgeonAlert`, renombrado a `StatusNormal`, ajuste de Fase 1 (10:00–10:45 AM), uso de `@Preview` en Fase 2 y hora límite de Fase 4. | 
-| v1.3.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Reemplazo de intervalos con huecos por función `evaluateLevel` con cortes continuos en `when`, validación de rangos de entrada en sección 9, clarificación de `SpaceEnvironment` como contexto visual, rol arquitectónico de `SpaceHazard.DISTANCE`, reasignación de `TEMP` (`RADIATION`) y `GLUCOSE` (`HOSTILE_ENVIRONMENT`), ajuste de `recordPvtResult` sobre `MOOD` sin alterar horas de sueño, comportamiento de `history7Days` en `Scenario.NOMINAL` y excepción de archivos de plantilla en `res/drawable/`. | 
-| v1.4.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Uso de `minOf(currentMood, ...)` en `recordPvtResult` para evitar mejorar `MOOD` con un resultado lento, alineación de `Scenario.RADIATION_SPIKE` (`TEMP`) e `ISOLATION_FATIGUE` (`SLEEP`, `MOOD`) con sus respectivos `SpaceHazard`, eliminación de redundancia de `DISTANCE` en sección 3, variación nominal en datos semilla de `history7Days` y manejo de salida en falso en `PvtTestScreen`. | 
-| v1.4.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Corrección de ruta completa en comando `git restore` de Fase 2, guarda `if (currentMood > target)` en `recordPvtResult` para evitar lecturas duplicadas en `history7Days` y nota de prueba manual para `THORAX_CARDIO` en Fase 3. | 
-| v1.4.2 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Alineacion de `targetSdk` y `compileSdk` a 37 en la seccion 3 segun el proyecto generado por la plantilla de Android Studio. | 
-| v1.5.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nuevas secciones 1.1 (Alcance y supuestos), 1.2 (Requisitos) y 1.3 (Trabajo futuro): captura manual, umbrales heuristicos, `MOOD` como estado conductual, PVT de un intento, contramedida como simplificacion, entorno sin efecto en umbrales y justificacion Offline-First por `DISTANCE`. Las secciones 3, 4.1, 4.3 y 10 referencian 1.1 y 1.2 en lugar de repetir el contenido. Redaccion impersonal en textos de interfaz. Ramas `Main` y `feature/Modulo<N>` en secciones 8 y 9. | 
-| v1.5.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Nombres de los responsables de los Modulos 2, 3 y 4 en la seccion 2. | 
-| v1.5.2 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Eliminacion de horarios en la seccion 8 (renombrada a Fases de trabajo). | 
-| v1.5.3 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Tabla de lectura de los cortes de `evaluateLevel` en la seccion 4.3 y referencia a `docs/guia_datos.md`. | 
-| v1.6.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Componente compartido `ProcedureAnimation` (seccion 6) y dependencia `lottie-compose` para animaciones de procedimiento (seccion 3). | 
-| v1.6.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Regla de presentacion de niveles en 1.1 (ESTABLE / NO OPTIMO / CRITICO, `MOOD` nunca critico), `statusLabel` y `displayLevel` en la seccion 6 y requisito de uso en la seccion 9. | 
-| v1.7.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Rediseño visual: `IndicatorTile`, `SpaceCard` con borde neutro, `StatusBadge` con texto blanco sobre fondos `Status*Strong` (secciones 6 y 7). Dashboard en cuadricula de 2 columnas con `IndicatorTile` y zonas con `displayLevel` (cambio coordinado con el Modulo 2). Pruebas unitarias de `HealthRepository` en `app/src/test`. | 
-| v1.7.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Integracion de Fase 3 en `Main` (Modulos 1, 3 y 4): `displayLevel` en captura, PVT y detalle; textos impersonales y aviso "Salida en falso — reintentar" en el PVT; navegacion con `rememberSaveable` para conservar la pantalla al girar; tema de ventana oscuro sin destello blanco; icono propio de la app (`ic_launcher_*`, actualizado por el lider durante la integracion). | 
+| v1.0.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Initial technical blueprint for Android Studio (Kotlin + Jetpack Compose), split into 4 modules, data contract and schedule. | 
+| v1.1.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Removed the redundant `CountermeasureLog` entity, state-based routing instead of an external library, exact screen signatures in section 4.2. | 
+| v1.2.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | `currentValue: Float`, `BodyZone` reduced to 3 zones with explicit mapping and thresholds in 4.3, `enum class Scenario`, `recordPvtResult`, removal of `requiresFlightSurgeonAlert`, rename to `StatusNormal`. | 
+| v1.3.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | `evaluateLevel` with continuous cutoffs, input range validation, `SpaceEnvironment` as visual context, architectural role of `SpaceHazard.DISTANCE`, hazard reassignment for `TEMP` and `GLUCOSE`. | 
+| v1.4.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | `recordPvtResult` never improves `MOOD`, scenarios aligned with their `SpaceHazard`, varied seed data, PVT false start handling. | 
+| v1.4.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Guard against duplicate readings in `recordPvtResult`; full path in the `git restore` command. | 
+| v1.4.2 | 2026-11-14 | Carlos Alberto Jaime Mascareño | `targetSdk` and `compileSdk` aligned to 37. | 
+| v1.5.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | New sections 1.1 (Scope and assumptions), 1.2 (Requirements) and 1.3 (Future work). Impersonal UI wording. `Main` and `feature/Modulo<N>` branches. | 
+| v1.5.1 – v1.5.3 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Module owners, removal of time slots in section 8, readable cutoff table in 4.3. | 
+| v1.6.0 – v1.6.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | `ProcedureAnimation` (Lottie) component; level presentation rule (`MOOD` never shown as critical) with `statusLabel` and `displayLevel`. | 
+| v1.7.0 – v1.7.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Visual redesign (`IndicatorTile`, `StatusBadge` on `Status*Strong`), `HealthRepository` unit tests, Phase 3 integration in `Main`, navigation that survives rotation, dark launch theme and app icon. | 
+| v1.8.0 – v1.8.1 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Bottom navigation with 4 tabs, removal of the body silhouette (RF-02 became the overall status), environment illustration (`EnvironmentScene`), icons (`AppIcons`), per-step animations (`StepAnimation`) and readable HRP hazard names (`hazardLabel`). | 
+| v1.9.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | The countermeasure no longer fixes the indicator instantly: guided plan (`CountermeasurePlanScreen`) ending with a mandatory new measurement. `applyCountermeasure` removed. Shared `BackPill` button. | 
+| v2.0.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | Whole app, code comments and documentation in English (the challenge is presented to NASA). Re-measure reminder notification (RF-12, `RemeasureReminder`). `docs/guia_datos.md` renamed to `docs/data_guide.md`. | 
+| v2.1.0 | 2026-11-14 | Carlos Alberto Jaime Mascareño | About screen with the demo disclaimer and team (FR-13, `features.about`), opened from the info button on the Today tab. Countermeasure plan steps announced as checkboxes by screen readers. | 
 
-## 0. Introducción
+## 0. Introduction
 
-Este documento es la fuente única de verdad para construir **SoftieCare**: qué se va a construir, con qué tecnologías de Android, cómo se organiza el repositorio y qué convenciones sigue todo el equipo durante el hackathon. Cada integrante debe leerlo completo antes de escribir código.
+This document is the single source of truth for building **SoftieCare**: what is built, with which Android technologies, how the repository is organized and which conventions the whole team follows during the hackathon. Every team member reads it in full before writing code.
 
-Una vez que cada integrante identifique su módulo en la sección 2, trabajará únicamente dentro de su paquete asignado para evitar conflictos de *merge*. La comunicación entre las interfaces se realiza exclusivamente a través del contrato de datos definido en la sección 4.1, las firmas de la sección 4.2 y las reglas de negocio de la sección 4.3.
+Once each team member identifies their module in section 2, they work only inside their assigned package to avoid merge conflicts. Screens communicate only through the data contract in section 4.1, the signatures in section 4.2 and the business rules in section 4.3.
 
-## 1. Resumen del proyecto
+## 1. Project summary
 
-**SoftieCare** es una aplicación nativa en Android de monitoreo y autoevaluación médica *Offline-First* para astronautas en misiones de larga duración. Permite a la tripulación evaluar su estado físico y conductual frente a los 5 peligros del *Human Research Program (HRP)* de la NASA a través de los 6 indicadores mencionados en la descripción del reto: presión arterial, frecuencia cardíaca, glucosa en sangre (`mg/dL`), temperatura corporal, horas de sueño y estado de ánimo.
+**SoftieCare** is a native, *Offline-First* Android app for medical monitoring and self-assessment for astronauts on long-duration missions. It lets the crew assess their physical and behavioral state against the 5 hazards of NASA's *Human Research Program (HRP)* through the 6 indicators named in the challenge description: blood pressure, heart rate, blood glucose (`mg/dL`), body temperature, sleep hours and mood.
 
-**División de trabajo (Equipo de 4 personas en total):**
+**Team split (4 people in total):**
 
-* El equipo consta de 4 integrantes; cada uno es responsable de uno de los 4 módulos de la sección 2.
+* Each of the 4 team members owns one of the 4 modules in section 2.
 
-* Carlos Alberto Jaime Mascareño (responsable del Módulo 1) realiza además el *scaffolding* inicial del repositorio y la integración final en `MainActivity.kt`.
+* Carlos Alberto Jaime Mascareño (owner of Module 1) also creates the initial repository scaffolding and does the final integration in `MainActivity.kt`.
 
-### 1.1 Alcance y supuestos
+### 1.1 Scope and assumptions
 
-* **Autoevaluacion con captura manual:** La version actual es una herramienta de autoevaluacion. El tripulante mide cada indicador con el instrumental de a bordo y registra el valor manualmente. La integracion con sensores y wearables queda fuera de alcance por decision explicita (ver 1.3).
+* **Self-assessment with manual entry:** The current version is a self-assessment tool. The crew member measures each indicator with onboard instruments and enters the value manually. Integration with sensors and wearables is out of scope by explicit decision (see 1.3).
 
-* **Umbrales heuristicos:** Los cortes de clasificacion `NORMAL` / `WARNING` / `CRITICAL` (tabla y cortes de la seccion 4.3) son heuristicos para demostracion de software. No constituyen guias clinicas verificadas de la NASA ni sustituyen el criterio de un medico de vuelo.
+* **Heuristic thresholds:** The `NORMAL` / `WARNING` / `CRITICAL` cutoffs (table and cutoffs in section 4.3) are heuristic values for a software demo. They are not verified NASA clinical guidelines and do not replace the judgment of a flight surgeon.
 
-* **Estado conductual y PVT:** El indicador `MOOD` representa el estado conductual del tripulante (animo y alerta) en una escala de `1.0` a `5.0`. La prueba de reaccion (PVT) es de un solo intento con umbrales demostrativos de interfaz tactil; no equivale al PVT clinico de 10 minutos y solo puede empeorar el estado conductual registrado (reglas en 4.3).
+* **Behavioral state and PVT:** The `MOOD` indicator represents the crew member's behavioral state (mood and alertness) on a `1.0` to `5.0` scale. The reaction test (PVT) is a single attempt with demo thresholds for a touch screen; it is not equivalent to the 10-minute clinical PVT and can only worsen the recorded behavioral state (rules in 4.3).
 
-* **Contramedida:** Confirmar la ejecucion de una contramedida restaura el indicador a su valor nominal como simplificacion de la demostracion. En uso real, el tripulante vuelve a medir el indicador despues de ejecutar el protocolo y el sistema clasifica la nueva lectura.
+* **Countermeasure:** A countermeasure does not fix the indicator by itself. The crew member follows a guided plan (steps, what to expect and warning signs), waits the indicated time and measures again; the level changes only with that new reading. In the demo the wait is accelerated to a few seconds and the plan content is heuristic.
 
-* **Entorno operativo:** El entorno seleccionado (transito a Marte en 0 g, base lunar o rover presurizado) es contexto operativo visual. En esta version no modifica los umbrales de clasificacion (ver 1.3).
+* **Operating environment:** The selected environment (transit to Mars in 0 g, lunar base or pressurized rover) is visual operating context. In this version it does not change the classification thresholds (see 1.3).
 
-* **Presentacion de niveles:** La interfaz muestra los niveles como "ESTABLE" (`NORMAL`), "NO OPTIMO" (`WARNING`) y "CRITICO" (`CRITICAL`). Para no reforzar un estado de animo bajo, `MOOD` nunca se presenta como "CRITICO": su nivel `CRITICAL` se muestra como "NO OPTIMO" y la lista principal no resalta su valor numerico. "CRITICO" queda para los indicadores fisicos. La clasificacion interna de la seccion 4.3 no cambia.
+* **Level presentation:** The interface shows levels as "STABLE" (`NORMAL`), "NOT OPTIMAL" (`WARNING`) and "CRITICAL" (`CRITICAL`). To avoid reinforcing a low mood, `MOOD` is never shown as "CRITICAL": its `CRITICAL` level is shown as "NOT OPTIMAL" and its numeric value is not highlighted. "CRITICAL" is reserved for physical indicators. The internal classification in section 4.3 does not change.
 
-* **Offline-First por el peligro `DISTANCE`:** Lejos de la Tierra, la comunicacion sufre retrasos de varios minutos en una mision a Marte y perdidas temporales de enlace, por lo que no se puede depender de telemedicina en tiempo real. Por esa razon el sistema opera al 100% sin red y la evaluacion se realiza de forma autonoma a bordo.
+* **Offline-First because of the `DISTANCE` hazard:** Far from Earth, communication suffers delays of several minutes on a Mars mission and temporary link losses, so real-time telemedicine cannot be relied on. For that reason the system works 100% without a network and the assessment happens autonomously on board.
 
-### 1.2 Requisitos
+### 1.2 Requirements
 
-Esta seccion define que hace el sistema. El como se construye en Android se define a partir de la seccion 3.
+This section defines what the system does. How it is built on Android is defined from section 3 onward.
 
-| ID | Requisito | 
+| ID | Requirement | 
 | ----- | ----- | 
-| RF-01 | El sistema muestra los 6 indicadores con su valor actual, unidad y nivel (`NORMAL`, `WARNING`, `CRITICAL`). | 
-| RF-02 | El sistema representa 3 zonas corporales (cabeza/mente, torax/cardiovascular, metabolico/endocrino) coloreadas segun el nivel de sus indicadores. | 
-| RF-03 | El sistema permite seleccionar el entorno operativo como contexto visual (ver 1.1). | 
-| RF-04 | El tripulante registra manualmente el valor de un indicador siguiendo una guia de 3 pasos. El sistema rechaza valores no numericos o fuera del rango valido de captura (tabla de 4.3). | 
-| RF-05 | El tripulante puede marcar un adjunto de imagen como evidencia; el sistema solo muestra una confirmacion visual y no almacena la imagen. | 
-| RF-06 | El sistema clasifica cada lectura con los cortes de la seccion 4.3. | 
-| RF-07 | El sistema conserva las ultimas 7 lecturas de cada indicador y muestra su tendencia. | 
-| RF-08 | El tripulante realiza una prueba de reaccion de un intento. Un toque antes del estimulo se trata como salida en falso y reinicia el intento sin registrar resultado. Un resultado lento reduce el estado conductual (reglas en 4.3). | 
-| RF-09 | El sistema muestra el detalle de cada indicador: peligro del HRP asociado, tendencia y protocolo de contramedida. El tripulante confirma la ejecucion de la contramedida (ver 1.1). | 
-| RF-10 | El sistema permite inyectar escenarios de demostracion: nominal, pico de radiacion y fatiga por aislamiento. | 
-| RNF-01 | El sistema funciona sin conexion de red (ver 1.1). | 
-| RNF-02 | La interfaz usa modo oscuro de alto contraste (ver seccion 7). | 
+| FR-01 | The system shows the 6 indicators with their current value, unit and level (`NORMAL`, `WARNING`, `CRITICAL`). | 
+| FR-02 | The system shows an overall status: the worst displayed level and how many indicators are stable. | 
+| FR-03 | The system lets the crew select the operating environment and shows it with an illustration of the location (spacecraft, lunar base or Mars rover) as visual context (see 1.1). | 
+| FR-04 | The crew member manually records an indicator value following a 3-step guide with an animation per step. The system rejects non-numeric values or values outside the valid capture range (table in 4.3). | 
+| FR-05 | The crew member can mark an image attachment as evidence; the system only shows a visual confirmation and does not store the image. | 
+| FR-06 | The system classifies each reading with the cutoffs in section 4.3. | 
+| FR-07 | The system keeps the last 7 readings of each indicator and shows their trend. | 
+| FR-08 | The crew member takes a single-attempt reaction test. A tap before the stimulus is a false start and restarts the attempt without recording a result. A slow result lowers the behavioral state (rules in 4.3). | 
+| FR-09 | The system shows the detail of each indicator: associated HRP hazard, trend and countermeasure protocol. | 
+| FR-10 | The system can inject demo scenarios: nominal, radiation spike and isolation fatigue. | 
+| FR-11 | The crew member follows a countermeasure plan with checkable steps, what to expect, warning signs and a wait time; at the end the system asks for a new measurement of the indicator (see 1.1). | 
+| FR-12 | When the countermeasure wait ends, the system shows a local notification reminding the crew member to measure again; opening it starts the guided measurement of that indicator. | 
+| FR-13 | The system shows an About screen with the app purpose, how it works, the offline design, the demo disclaimer (see 1.1) and the team. | 
+| NFR-01 | The system works without a network connection (see 1.1). | 
+| NFR-02 | The interface uses a high-contrast dark mode (see section 7). | 
+| NFR-03 | All interface text and project documentation are in English. | 
 
-### 1.3 Trabajo futuro
+### 1.3 Future work
 
-* Captura automatica desde sensores y wearables.
+* Automatic capture from sensors and wearables.
 
-* Ajuste de los umbrales de clasificacion segun el entorno operativo.
+* Classification thresholds adjusted to the operating environment.
 
-* Verificacion de la contramedida mediante una nueva medicion obligatoria.
+* Full clinical-length PVT with multiple stimuli.
 
-* PVT completo de duracion clinica con multiples estimulos.
+## 2. Modules and owners
 
-## 2. Módulos y responsables
-
-| \# | Módulo / Interfaz | Paquete (`com.softiecare.app...`) | Responsable | Alcance técnico principal | 
+| \# | Module / Interface | Package (`com.softiecare.app...`) | Owner | Main technical scope | 
 | ----- | ----- | ----- | ----- | ----- | 
-| 1 | Core, Motor Clínico & Simulador | `core.model`, `core.data`, `features.simulator` | Carlos Alberto Jaime Mascareño | Scaffolding inicial, entidades base, función `evaluateLevel` en `HealthRepository`, estado reactivo (`StateFlow`) y diálogo de inyección de escenarios (`SimulatorSheet`). | 
-| 2 | Anatomía Interactiva & HUD Principal | `features.dashboard` (+ `res/drawable`) | Integrante 2: Emir Alexander Alcantar Martinez | Pantalla principal dividida: silueta humana en 3 zonas interactivas, lista lateral de los 6 indicadores y selector visual de entorno. Único responsable de agregar recursos nuevos en `res/drawable`. | 
-| 3 | Captura Guiada & Test PVT | `features.assessment` | Integrante 3: Elias Tamayo Salcedo | Formulario guiado paso a paso con validación numérica y de rango, confirmación visual simulada de adjunto de imagen y minijuego de tiempo de reacción (PVT). | 
-| 4 | Diagnóstico, Contramedidas & Gráficas | `features.countermeasures` | Integrante 4: Arturo Rafael Cornejo Escobar | Vista de detalle clínico: relación con los peligros del HRP, gráfica de las últimas 7 lecturas en `Canvas` y ejecución de contramedida. | 
+| 1 | Core, Clinical Engine & Simulator | `core.model`, `core.data`, `core.notifications`, `features.simulator`, `features.about` | Carlos Alberto Jaime Mascareño | Initial scaffolding, base entities, `evaluateLevel` in `HealthRepository`, reactive state (`StateFlow`), scenario injection dialog (`SimulatorSheet`), re-measure reminders (`RemeasureReminder`) and the About screen. | 
+| 2 | Main HUD & Navigation | `features.dashboard` (+ `res/drawable`) | Member 2: Emir Alexander Alcantar Martinez | Today tab (environment, overall status and alerts), Vitals (grid of the 6 indicators), History (trends) and Guides (procedures). Sole owner of new resources in `res/drawable`. | 
+| 3 | Guided Measurement & PVT | `features.assessment` | Member 3: Elias Tamayo Salcedo | Step-by-step guided form with numeric and range validation, simulated image attachment confirmation and the reaction time mini-game (PVT). | 
+| 4 | Diagnosis, Countermeasures & Charts | `features.countermeasures` | Member 4: Arturo Rafael Cornejo Escobar | Clinical detail view: link to HRP hazards, chart of the last 7 readings in `Canvas` and guided countermeasure plan (`CountermeasurePlanScreen`). | 
 
-## 3. Stack tecnológico
+## 3. Technology stack
 
-| Capa | Tecnología | Justificación | 
+| Layer | Technology | Rationale | 
 | ----- | ----- | ----- | 
-| **SO / SDK Android** | `minSdk = 26` (Android 8.0), `targetSdk = 37` | `minSdk 26` soporta `java.time` nativo sin configurar *desugaring*. Verificar que `compileSdk = 37` esté instalado en el SDK Manager local. | 
-| **Lenguaje y UI** | Kotlin y Jetpack Compose (Material 3) | Si se usa Kotlin 2.0+, verificar que el plugin `org.jetbrains.kotlin.plugin.compose` esté declarado en `build.gradle.kts` (incluido por defecto en la plantilla *Empty Activity* de Android Studio reciente). | 
-| **Ruteo / Navegación** | Navegación por estado (`when (currentScreen)`) + booleano `showSimulator` en `MainActivity.kt` | Elimina dependencias externas de navegación y evita errores de rutas al integrar las 4 ramas. `SimulatorSheet` se implementa como un `AlertDialog` controlado por un `Boolean` independiente (conservando el nombre `SimulatorSheet` para no romper la firma acordada). | 
-| **Estado y Persistencia** | `StateFlow` en `HealthRepository` (Singleton en memoria con *Seed Data*) | Garantiza velocidad de desarrollo y cero fallos de migración SQL durante la demostración. | 
-| **Visualización — Gráficas** | `Canvas` nativo de Jetpack Compose | Dibuja la tendencia de `history7Days` sin librerías externas. | 
-| **Visualización — Cuerpo** | Bloques táctiles en Compose (`Box`/`Canvas`) o 3 `VectorDrawable` separados | Un vector único no permite clic ni coloreado por región fácilmente; se usan 3 contenedores interactivos (uno por `BodyZone`) coloreados con `StatusNormal`, `StatusWarning` o `StatusCritical`. | 
-| **Animaciones de procedimiento** | `com.airbnb.android:lottie-compose` 6.7.1 + archivos JSON en `app/src/main/assets/lottie/` | Animaciones de LottieFiles bajo la Lottie Simple License (uso libre, credito recomendado en `app/src/main/assets/lottie/README.md`). Se empaquetan en la app, sin red. | 
-| **Backend / Red / Auth** | Ninguno (100% Offline-First) | Requisito arquitectónico derivado de `SpaceHazard.DISTANCE` (ver sección 1.1). | 
+| **Android OS / SDK** | `minSdk = 26` (Android 8.0), `targetSdk = 37` | `minSdk 26` supports `java.time` natively without desugaring. Check that `compileSdk = 37` is installed in the local SDK Manager. | 
+| **Language and UI** | Kotlin and Jetpack Compose (Material 3) | With Kotlin 2.0+, check that the `org.jetbrains.kotlin.plugin.compose` plugin is declared in `build.gradle.kts` (included by default in the recent *Empty Activity* template). | 
+| **Routing / Navigation** | State-based navigation (`when (route)`) + Material 3 `NavigationBar` with 4 tabs + `showSimulator` boolean in `MainActivity.kt` | No external navigation dependency and no route errors when integrating the 4 branches. `SimulatorSheet` is an `AlertDialog` controlled by its own `Boolean` (keeping the `SimulatorSheet` name so the agreed signature does not break). | 
+| **State and persistence** | `StateFlow` in `HealthRepository` (in-memory singleton with seed data) | Fast development and zero SQL migration failures during the demo. | 
+| **Visualization — Charts** | Native Jetpack Compose `Canvas` | Draws the `history7Days` trend without external libraries. | 
+| **Visualization — Environment, icons and step animations** | Compose `Canvas` illustrations and animations; Material Symbols icons (Apache 2.0) defined as `ImageVector` in code | No new dependencies or asset files; works offline. | 
+| **Notifications** | `AlarmManager` (inexact alarm) + `BroadcastReceiver` + `NotificationCompat`; `POST_NOTIFICATIONS` permission on Android 13+ | Local reminders without a network or extra libraries. The inexact alarm needs no special permission; Android may deliver it a few seconds late. | 
+| **Procedure animations (optional)** | `com.airbnb.android:lottie-compose` 6.7.1 + JSON files in `app/src/main/assets/lottie/` | LottieFiles animations under the Lottie Simple License (credit in `app/src/main/assets/lottie/README.md`). Bundled in the app, offline. | 
+| **Backend / Network / Auth** | None (100% Offline-First) | Architectural requirement derived from `SpaceHazard.DISTANCE` (see section 1.1). | 
 
-## 4. Estructura del repositorio
+## 4. Repository structure
 
 ```
 softiecare/
 ├── app/
 │   ├── src/main/
 │   │   ├── java/com/softiecare/app/
-│   │   │   ├── MainActivity.kt              # Punto de entrada, estado de pantalla y overlay de simulador
+│   │   │   ├── MainActivity.kt              # Entry point, screen state, tabs and simulator overlay
 │   │   │   ├── ui/
 │   │   │   │   ├── theme/                   # Color.kt, Theme.kt, Type.kt
-│   │   │   │   └── components/              # SharedComponents.kt
+│   │   │   │   └── components/              # SharedComponents.kt, AppIcons.kt, EnvironmentScene.kt, StepAnimation.kt
 │   │   │   ├── core/
 │   │   │   │   ├── model/                   # HealthModels.kt
-│   │   │   │   └── data/                    # HealthRepository.kt
+│   │   │   │   ├── data/                    # HealthRepository.kt
+│   │   │   │   └── notifications/           # RemeasureReminder.kt
 │   │   │   └── features/
-│   │   │       ├── dashboard/               # Módulo 2: DashboardScreen.kt
-│   │   │       ├── assessment/              # Módulo 3: AssessmentScreen.kt, PvtTestScreen.kt
-│   │   │       ├── countermeasures/         # Módulo 4: CountermeasureDetailScreen.kt
-│   │   │       └── simulator/               # Módulo 1: SimulatorSheet.kt
+│   │   │       ├── dashboard/               # Module 2: DashboardScreen, VitalsScreen, HistoryScreen, GuidesScreen
+│   │   │       ├── assessment/              # Module 3: AssessmentScreen.kt, PvtTestScreen.kt
+│   │   │       ├── countermeasures/         # Module 4: CountermeasureDetailScreen, CountermeasurePlanScreen, CountermeasurePlans
+│   │   │       ├── simulator/               # Module 1: SimulatorSheet.kt
+│   │   │       └── about/                   # Module 1: AboutScreen.kt
 │   │   └── res/
-│   │       └── drawable/                    # Exclusivo de Módulo 2 tras el commit inicial de plantilla
+│   │       └── drawable/                    # Module 2 only after the initial template commit
 │   └── build.gradle.kts
 ├── docs/
 └── README.md
 
 ```
 
-**Límites de propiedad, para minimizar conflictos de merge trabajando en paralelo:**
+**Ownership boundaries, to minimize merge conflicts while working in parallel:**
 
-* Cada integrante trabaja únicamente dentro de su carpeta en `features/<nombre-modulo>/`.
+* Each member works only inside their own `features/<module-name>/` folder.
 
-* `res/drawable/` incluye `ic_launcher_background.xml` e `ic_launcher_foreground.xml` en el commit inicial del *scaffolding*; después de ese commit inicial, solo puede ser modificado por el Integrante 2.
+* `res/drawable/` includes `ic_launcher_background.xml` and `ic_launcher_foreground.xml` from the initial scaffolding commit; after that commit only Member 2 modifies it. Exception: `ic_notification.xml` was added by the lead during integration for FR-12.
 
-* `core/model/`, `core/data/`, `ui/theme/`, `ui/components/` y `MainActivity.kt` los entrega el *scaffolding* inicial y solo los edita Carlos Alberto Jaime Mascareño.
+* `core/`, `ui/theme/`, `ui/components/` and `MainActivity.kt` come from the initial scaffolding and are edited only by Carlos Alberto Jaime Mascareño.
 
-### 4.1 Contrato de datos entre módulos (`core/model/HealthModels.kt`)
+### 4.1 Data contract between modules (`core/model/HealthModels.kt`)
 
-Todos los valores de indicadores son numéricos (`Float`) para permitir validación uniforme con `toFloatOrNull()` y graficado directo en `history7Days` (que almacena las últimas 7 lecturas registradas, iniciando con una lista semilla de exactamente 7 elementos por indicador con ligeras variaciones dentro del rango `NORMAL` para evitar una línea plana inicial, siendo el séptimo elemento igual a `normalValue`):
+All indicator values are numeric (`Float`) for uniform validation with `toFloatOrNull()` and direct charting from `history7Days`. `history7Days` stores the last 7 recorded readings; it starts with a seed list of exactly 7 elements per indicator with small variations inside the `NORMAL` range (to avoid a flat initial line), the seventh element being equal to `normalValue`.
 
-* **Presión Arterial (`BP_SYS`):** Registra únicamente la presión sistólica en `mmHg`.
+* **Blood pressure (`BP_SYS`):** Records only the systolic pressure in `mmHg`.
 
-* **Estado Conductual (`MOOD`):** Animo y alerta (ver 1.1) en escala numérica de `1.0` (crítico) a `5.0` (óptimo) en `pts`.
+* **Behavioral state (`MOOD`):** Mood and alertness (see 1.1) on a numeric scale from `1.0` (critical) to `5.0` (optimal) in `pts`.
 
-| Tipo / Estado | Quién escribe / invoca | Quién lee (`collectAsState`) | Dónde vive | 
+| Type / State | Who writes / calls | Who reads (`collectAsState`) | Where it lives | 
 | ----- | ----- | ----- | ----- | 
-| `VitalIndicator` | Módulo 1 (`injectScenario`), Módulo 3 (`updateIndicatorValue`, `recordPvtResult`) y Módulo 4 (`applyCountermeasure`) | Módulo 2 (HUD y Silueta), Módulo 3 (Guía e input actual) y Módulo 4 (Detalle y Gráfica) | `core/model/HealthModels.kt` | 
-| `SpaceEnvironment` | Módulo 2 (`setEnvironment`) | Módulo 2 (Chip de entorno activo en barra superior) | `core/model/HealthModels.kt` | 
+| `VitalIndicator` | Module 1 (`injectScenario`), Module 3 (`updateIndicatorValue`, `recordPvtResult`) | Module 2 (Today, Vitals, History and Guides tabs), Module 3 (guide and current input) and Module 4 (detail, chart and plan) | `core/model/HealthModels.kt` | 
+| `SpaceEnvironment` | Module 2 (`setEnvironment`) | Module 2 (environment banner and selector), `MainActivity` (background tint) | `core/model/HealthModels.kt` | 
 
 ```
 package com.softiecare.app.core.model
@@ -183,9 +188,11 @@ data class VitalIndicator(
 
 ```
 
-### 4.2 Firmas exactas de pantallas y métodos de `HealthRepository`
+`BodyZone` remains in the model as data only; the interface no longer shows body zones (FR-02).
 
-**Métodos públicos en `core/data/HealthRepository.kt`:**
+### 4.2 Exact screen signatures and `HealthRepository` methods
+
+**Public methods in `core/data/HealthRepository.kt`:**
 
 ```
 object HealthRepository {
@@ -196,67 +203,96 @@ object HealthRepository {
     fun evaluateLevel(id: String, v: Float): StatusLevel
     fun updateIndicatorValue(id: String, newValue: Float)
     fun recordPvtResult(reactionTimeMs: Long)
-    fun applyCountermeasure(id: String)
     fun injectScenario(scenario: Scenario)
 }
 
 ```
 
-**Firmas `@Composable` de cada módulo:**
+**Re-measure reminder in `core/notifications/RemeasureReminder.kt`:**
 
 ```
-// Módulo 1: features/simulator/SimulatorSheet.kt
+object RemeasureReminder {
+    const val EXTRA_INDICATOR_ID: String
+    fun schedule(context: Context, indicatorId: String, indicatorName: String, delayMs: Long)
+}
+
+```
+
+**`@Composable` signatures per module:**
+
+```
+// Module 1: features/simulator/SimulatorSheet.kt and features/about/AboutScreen.kt
 @Composable
 fun SimulatorSheet(onDismiss: () -> Unit)
 
-// Módulo 2: features/dashboard/DashboardScreen.kt
+@Composable
+fun AboutScreen(onBack: () -> Unit)
+
+// Module 2: features/dashboard/DashboardScreen.kt
 @Composable
 fun DashboardScreen(
     onIndicatorClick: (String) -> Unit,
-    onOpenAssessment: (String) -> Unit,
     onOpenPvtTest: () -> Unit,
-    onOpenSimulator: () -> Unit
+    onOpenSimulator: () -> Unit,
+    onOpenAbout: () -> Unit
 )
 
-// Módulo 3: features/assessment/AssessmentScreen.kt y PvtTestScreen.kt
+// Module 2: features/dashboard/VitalsScreen.kt, HistoryScreen.kt and GuidesScreen.kt
+@Composable
+fun VitalsScreen(onIndicatorClick: (String) -> Unit, onOpenAssessment: (String) -> Unit)
+
+@Composable
+fun HistoryScreen(onIndicatorClick: (String) -> Unit)
+
+@Composable
+fun GuidesScreen(onOpenAssessment: (String) -> Unit, onOpenPvtTest: () -> Unit)
+
+// Module 3: features/assessment/AssessmentScreen.kt and PvtTestScreen.kt
 @Composable
 fun AssessmentScreen(indicatorId: String, onBack: () -> Unit)
 
 @Composable
 fun PvtTestScreen(onBack: () -> Unit)
 
-// Módulo 4: features/countermeasures/CountermeasureDetailScreen.kt
+// Module 4: features/countermeasures/CountermeasureDetailScreen.kt and CountermeasurePlanScreen.kt
 @Composable
-fun CountermeasureDetailScreen(indicatorId: String, onBack: () -> Unit)
+fun CountermeasureDetailScreen(indicatorId: String, onBack: () -> Unit, onStartCountermeasure: () -> Unit)
+
+@Composable
+fun CountermeasurePlanScreen(indicatorId: String, onBack: () -> Unit, onRemeasure: () -> Unit)
 
 ```
 
-### 4.3 Mapeo de indicadores, cortes continuos (`evaluateLevel`) y reglas de negocio
+### 4.3 Indicator mapping, continuous cutoffs (`evaluateLevel`) and business rules
 
-*(Los cortes siguientes son heurísticos; ver 1.1).*
+*(The following cutoffs are heuristic; see 1.1.)*
 
-**Cobertura de los 5 Peligros del HRP (`SpaceHazard`):**
+**Coverage of the 5 HRP hazards (`SpaceHazard`):**
 
-* `GRAVITY`, `RADIATION`, `HOSTILE_ENVIRONMENT` e `ISOLATION` se asignan directamente a los 6 indicadores como `primaryHazard`:
+* `GRAVITY`, `RADIATION`, `HOSTILE_ENVIRONMENT` and `ISOLATION` are assigned directly to the 6 indicators as `primaryHazard`:
 
-  * `TEMP` se asocia a `RADIATION` (fiebre/alteración del sistema inmune inducida por radiación espacial).
+  * `TEMP` is linked to `RADIATION` (fever / immune changes induced by space radiation).
 
-  * `GLUCOSE` se asocia a `HOSTILE_ENVIRONMENT` (alteración metabólica y nutricional en hábitat cerrado).
+  * `GLUCOSE` is linked to `HOSTILE_ENVIRONMENT` (metabolic and nutritional changes in a closed habitat).
 
-* `DISTANCE` (distancia de la Tierra) no se asigna a un indicador: es el peligro transversal que justifica la arquitectura *Offline-First* (ver 1.1).
+* `DISTANCE` (distance from Earth) is not assigned to an indicator: it is the cross-cutting hazard that justifies the *Offline-First* architecture (see 1.1).
 
-| `id` | Nombre | Zona (`BodyZone`) | Peligro (`SpaceHazard`) | `normalValue` (`unit`) | Rango válido de captura (`min..max`) | 
+* The interface shows each hazard with a readable name from `hazardLabel` (section 6), never the enum name.
+
+| `id` | Name | Zone (`BodyZone`) | Hazard (`SpaceHazard`) | `normalValue` (`unit`) | Valid capture range (`min..max`) | 
 | ----- | ----- | ----- | ----- | ----- | ----- | 
-| `"BP_SYS"` | Presión Sistólica | `THORAX_CARDIO` | `GRAVITY` | `120.0f` (`mmHg`) | `50.0f..250.0f` | 
-| `"HEART_RATE"` | Frecuencia Cardíaca | `THORAX_CARDIO` | `GRAVITY` | `72.0f` (`bpm`) | `30.0f..220.0f` | 
-| `"GLUCOSE"` | Glucosa en Ayunas | `METABOLIC_ENDOCRINE` | `HOSTILE_ENVIRONMENT` | `90.0f` (`mg/dL`) | `30.0f..400.0f` | 
-| `"TEMP"` | Temperatura Corporal | `METABOLIC_ENDOCRINE` | `RADIATION` | `36.6f` (`°C`) | `32.0f..43.0f` | 
-| `"SLEEP"` | Horas de Sueño | `HEAD_MIND` | `ISOLATION` | `7.5f` (`hrs`) | `0.0f..24.0f` | 
-| `"MOOD"` | Estado Conductual | `HEAD_MIND` | `ISOLATION` | `4.5f` (`pts` 1-5) | `1.0f..5.0f` | 
+| `"BP_SYS"` | Systolic Blood Pressure | `THORAX_CARDIO` | `GRAVITY` | `120.0f` (`mmHg`) | `50.0f..250.0f` | 
+| `"HEART_RATE"` | Heart Rate | `THORAX_CARDIO` | `GRAVITY` | `72.0f` (`bpm`) | `30.0f..220.0f` | 
+| `"GLUCOSE"` | Fasting Glucose | `METABOLIC_ENDOCRINE` | `HOSTILE_ENVIRONMENT` | `90.0f` (`mg/dL`) | `30.0f..400.0f` | 
+| `"TEMP"` | Body Temperature | `METABOLIC_ENDOCRINE` | `RADIATION` | `36.6f` (`°C`) | `32.0f..43.0f` | 
+| `"SLEEP"` | Sleep Hours | `HEAD_MIND` | `ISOLATION` | `7.5f` (`hrs`) | `0.0f..24.0f` | 
+| `"MOOD"` | Behavioral State | `HEAD_MIND` | `ISOLATION` | `4.5f` (`pts` 1-5) | `1.0f..5.0f` | 
 
-**Regla de corte continuo sin huecos decimales (`evaluateLevel`):**
+The capture range only rejects implausible entries (typos or instrument errors); it is not a clinical scale. For example, `TEMP` accepts `32.0` to `43.0` °C because values outside that range are not compatible with a valid reading.
 
-Para evitar que valores decimales intermedios (ej. `94.95f` o `9.5f`) queden fuera de rango, `evaluateLevel` evalúa desigualdades estrictas en orden (`CRITICAL` -> `WARNING` -> `else NORMAL`):
+**Continuous cutoff rule without decimal gaps (`evaluateLevel`):**
+
+To keep intermediate decimal values (e.g. `94.95f` or `9.5f`) from falling outside every range, `evaluateLevel` evaluates strict inequalities in order (`CRITICAL` -> `WARNING` -> `else NORMAL`):
 
 ```
 fun evaluateLevel(id: String, v: Float): StatusLevel = when (id) {
@@ -295,149 +331,163 @@ fun evaluateLevel(id: String, v: Float): StatusLevel = when (id) {
 
 ```
 
-**Lectura de los cortes** (misma regla que el codigo anterior; `v` = valor capturado):
+**Reading the cutoffs** (same rule as the code above; `v` = entered value):
 
-| `id` | `NORMAL` (estable) | `WARNING` (precaucion) | `CRITICAL` (malo) | 
+| `id` | `NORMAL` (stable) | `WARNING` (caution) | `CRITICAL` (bad) | 
 | ----- | ----- | ----- | ----- | 
-| `BP_SYS` | 95 ≤ v < 130 | 90 ≤ v < 95 o 130 ≤ v < 140 | v < 90 o v ≥ 140 | 
-| `HEART_RATE` | 60 ≤ v ≤ 90 | 50 ≤ v < 60 o 90 < v ≤ 105 | v < 50 o v > 105 | 
-| `GLUCOSE` | 70 ≤ v < 100 | 60 ≤ v < 70 o 100 ≤ v ≤ 125 | v < 60 o v > 125 | 
-| `TEMP` | 36.1 ≤ v < 37.3 | 35.5 ≤ v < 36.1 o 37.3 ≤ v < 38.0 | v < 35.5 o v ≥ 38.0 | 
-| `SLEEP` | 7.0 ≤ v ≤ 9.0 | 5.5 ≤ v < 7.0 o 9.0 < v ≤ 10.0 | v < 5.5 o v > 10.0 | 
+| `BP_SYS` | 95 ≤ v < 130 | 90 ≤ v < 95 or 130 ≤ v < 140 | v < 90 or v ≥ 140 | 
+| `HEART_RATE` | 60 ≤ v ≤ 90 | 50 ≤ v < 60 or 90 < v ≤ 105 | v < 50 or v > 105 | 
+| `GLUCOSE` | 70 ≤ v < 100 | 60 ≤ v < 70 or 100 ≤ v ≤ 125 | v < 60 or v > 125 | 
+| `TEMP` | 36.1 ≤ v < 37.3 | 35.5 ≤ v < 36.1 or 37.3 ≤ v < 38.0 | v < 35.5 or v ≥ 38.0 | 
+| `SLEEP` | 7.0 ≤ v ≤ 9.0 | 5.5 ≤ v < 7.0 or 9.0 < v ≤ 10.0 | v < 5.5 or v > 10.0 | 
 | `MOOD` | v ≥ 4.0 | 2.5 ≤ v < 4.0 | v < 2.5 | 
 
-Los datos de prueba para cada nivel estan en `docs/guia_datos.md`.
+Test data for each level is in `docs/data_guide.md`.
 
-**Comportamiento exacto de los métodos en `HealthRepository`:**
+**Exact behavior of the `HealthRepository` methods:**
 
-1. **`updateIndicatorValue(id, newValue)`:** Actualiza `currentValue = newValue`, asigna `level = evaluateLevel(id, newValue)`, y rota la ventana de las últimas 7 lecturas en `history7Days` eliminando el primer elemento (`drop(1)`) y agregando `newValue` al final (`+ newValue`).
+1. **`updateIndicatorValue(id, newValue)`:** Sets `currentValue = newValue`, assigns `level = evaluateLevel(id, newValue)` and rotates the window of the last 7 readings in `history7Days` by dropping the first element (`drop(1)`) and appending `newValue` (`+ newValue`).
 
-2. **`applyCountermeasure(id)`:** Restaura el indicador a su estado nominal: asigna `currentValue = normalValue`, `level = StatusLevel.NORMAL`, y agrega `normalValue` al final de `history7Days` (`drop(1) + normalValue`). Es la simplificacion descrita en 1.1.
+2. **Countermeasure:** There is no method that restores the indicator. The new reading after the plan is recorded with `updateIndicatorValue` (see 1.1).
 
-3. **`recordPvtResult(reactionTimeMs)`:** El PVT demostrativo (ver 1.1) mide un único tiempo de reacción táctil en milisegundos e impacta el indicador conductual `"MOOD"` únicamente si el resultado es más bajo que el `currentMood` actual (evitando mejorar el estado o insertar lecturas repetidas en `history7Days`):
+3. **`recordPvtResult(reactionTimeMs)`:** The demo PVT (see 1.1) measures a single touch reaction time in milliseconds and affects the behavioral indicator `"MOOD"` only if the result is lower than the current `currentMood` (it never improves the state nor inserts repeated readings in `history7Days`):
 
-   * Si `reactionTimeMs > 500L` y `currentMood > 2.0f`: invoca `updateIndicatorValue("MOOD", 2.0f)` (`CRITICAL`).
+   * If `reactionTimeMs > 500L` and `currentMood > 2.0f`: calls `updateIndicatorValue("MOOD", 2.0f)` (`CRITICAL`).
 
-   * Si `reactionTimeMs in 381L..500L` y `currentMood > 3.0f`: invoca `updateIndicatorValue("MOOD", 3.0f)` (quedando en al menos `WARNING`, o manteniendo `CRITICAL` si ya era menor o igual a `2.0f`).
+   * If `reactionTimeMs in 381L..500L` and `currentMood > 3.0f`: calls `updateIndicatorValue("MOOD", 3.0f)` (at least `WARNING`, or keeps `CRITICAL` if it was already at or below `2.0f`).
 
-   * Si `reactionTimeMs <= 380L` (o si `currentMood` ya era menor o igual al valor objetivo): mantiene el estado y `history7Days` sin cambios.
+   * If `reactionTimeMs <= 380L` (or `currentMood` was already at or below the target): state and `history7Days` stay unchanged.
 
-   * Si el usuario toca la pantalla antes de que aparezca el estímulo verde, `PvtTestScreen` muestra en pantalla el aviso `"Salida en falso — reintentar"` y reinicia el intento sin invocar `recordPvtResult`.
+   * If the user taps before the green stimulus appears, `PvtTestScreen` shows `"False start — retry"` and restarts the attempt without calling `recordPvtResult`.
 
-4. **`injectScenario(scenario)`:** Cada escenario modifica exclusivamente los indicadores asociados a su `SpaceHazard`:
+4. **`injectScenario(scenario)`:** Each scenario changes only the indicators linked to its `SpaceHazard`:
 
-   * `Scenario.NOMINAL`: Restaura los 6 indicadores a su estado semilla inicial completo (`currentValue = normalValue`, `level = StatusLevel.NORMAL` y `history7Days` restaurado a la lista semilla original de 7 lecturas nominales variadas).
+   * `Scenario.NOMINAL`: Restores the 6 indicators to their full initial seed state (`currentValue = normalValue`, `level = StatusLevel.NORMAL` and `history7Days` restored to the original seed list of 7 varied nominal readings).
 
-   * `Scenario.RADIATION_SPIKE`: Invoca únicamente `updateIndicatorValue("TEMP", 38.4f)` (`CRITICAL`, `SpaceHazard.RADIATION`).
+   * `Scenario.RADIATION_SPIKE`: Calls only `updateIndicatorValue("TEMP", 38.4f)` (`CRITICAL`, `SpaceHazard.RADIATION`).
 
-   * `Scenario.ISOLATION_FATIGUE`: Invoca únicamente `updateIndicatorValue("SLEEP", 4.5f)` (`CRITICAL`, `SpaceHazard.ISOLATION`) y `updateIndicatorValue("MOOD", 2.0f)` (`CRITICAL`, `SpaceHazard.ISOLATION`).
+   * `Scenario.ISOLATION_FATIGUE`: Calls only `updateIndicatorValue("SLEEP", 4.5f)` (`CRITICAL`, `SpaceHazard.ISOLATION`) and `updateIndicatorValue("MOOD", 2.0f)` (`CRITICAL`, `SpaceHazard.ISOLATION`).
 
-5. **`setEnvironment(env)`:** Actualiza únicamente el `StateFlow<SpaceEnvironment>` para reflejar visualmente el contexto operativo actual en el encabezado del Dashboard. No interviene en `evaluateLevel` (ver 1.1).
+5. **`setEnvironment(env)`:** Updates only the `StateFlow<SpaceEnvironment>` to show the current operating context. It does not affect `evaluateLevel` (see 1.1).
 
-6. **Adjunto de imagen en Módulo 3 (`AssessmentScreen`):** Es exclusivamente un estado visual local (`var hasAttachedImage by remember { mutableStateOf(false) }`) que muestra confirmación en pantalla al usuario; no modifica `VitalIndicator`.
+6. **Image attachment in Module 3 (`AssessmentScreen`):** Purely local visual state (`var hasAttachedImage by remember { mutableStateOf(false) }`) that shows an on-screen confirmation; it does not modify `VitalIndicator`.
 
-## 5. Convenciones de código
+7. **Re-measure reminder (FR-12):** When all plan steps are checked, `CountermeasurePlanScreen` requests the `POST_NOTIFICATIONS` permission (Android 13+) and calls `RemeasureReminder.schedule` with the demo wait. `RemeasureReceiver` posts the notification; tapping it opens `MainActivity` with `EXTRA_INDICATOR_ID`, which navigates to `AssessmentScreen` for that indicator. Without the permission, no notification is shown and the in-app countdown still works.
 
-* **Archivos `.kt`, funciones `@Composable` y Clases:** `PascalCase` (ej. función `DashboardScreen()`, clase `VitalIndicator`).
+## 5. Code conventions
 
-* **Funciones regulares, propiedades y variables:** `camelCase`.
+* **`.kt` files, `@Composable` functions and classes:** `PascalCase` (e.g. function `DashboardScreen()`, class `VitalIndicator`).
 
-* **Nombres de paquete:** `lowercase` separados por punto (ej. `com.softiecare.app.features.countermeasures`).
+* **Regular functions, properties and variables:** `camelCase`.
 
-* **Logs y textos en consola (`println` / `Log.d`):** No usar tildes ni signos de puntuación finales dentro de las cadenas de impresión (ej. `println("Actualizando lectura de glucosa")`).
+* **Package names:** `lowercase`, dot-separated (e.g. `com.softiecare.app.features.countermeasures`).
 
-* **Comentarios:** Cortos y únicamente cuando ocurra lógica no evidente.
+* **Language:** Interface text, logs, code comments, test names and documentation are written in English.
 
-* **Prioridad de implementación:** Código funcional, directo y estándar antes que sobre-optimizado.
+* **Logs and console output (`println` / `Log.d`):** No trailing punctuation inside printed strings (e.g. `println("Updating glucose reading")`).
 
-## 6. Componentes base compartidos (`ui/components/SharedComponents.kt`)
+* **Comments:** Short and only where the logic is not obvious.
 
-Entregados en el *scaffolding* inicial para mantener consistencia visual:
+* **Implementation priority:** Functional, direct and standard code over premature optimization.
 
-* `SpaceCard(statusLevel: StatusLevel, onClick: (() -> Unit)?, content: @Composable () -> Unit)`: Contenedor con fondo `SurfacePanel` y borde neutro. El estado se comunica solo con `StatusBadge`; `statusLevel` se conserva para no romper la firma.
+## 6. Shared base components (`ui/components/`)
 
-* `StatusBadge(level: StatusLevel)`: Etiqueta semántica con el texto de `statusLabel(level)` ("ESTABLE", "NO OPTIMO" o "CRITICO") en blanco sobre `statusContainerColor(level)`.
+Delivered with the scaffolding and integration to keep the visual design consistent:
 
-* `IndicatorTile(indicator: VitalIndicator, onClick: () -> Unit, modifier: Modifier = Modifier, onMeasure: (() -> Unit)? = null)`: Cuadro grande con el nombre, el valor en grande con su unidad y `StatusBadge(displayLevel(indicator))`. En `MOOD` no muestra el valor numerico (1.1). Lo usa la cuadricula de 2 columnas del Dashboard.
+* `SpaceCard(statusLevel: StatusLevel, onClick: (() -> Unit)?, content: @Composable () -> Unit)`: Container with `SurfacePanel` background and neutral border. Status is communicated only by `StatusBadge`; `statusLevel` is kept so the signature does not break.
 
-* `displayLevel(indicator: VitalIndicator): StatusLevel`: Nivel que se muestra en pantalla segun la regla de presentacion de 1.1 (`MOOD` en `CRITICAL` se muestra como `WARNING`). Se usa para etiquetas, bordes y colores de zona en lugar de `indicator.level`.
+* `StatusBadge(level: StatusLevel)`: Semantic badge with the text of `statusLabel(level)` ("STABLE", "NOT OPTIMAL" or "CRITICAL") in white on `statusContainerColor(level)`. The text never wraps.
 
-* `HazardTag(hazard: SpaceHazard)`: Chip informativo que muestra cuál de los 5 peligros del HRP está asociado al indicador.
+* `IndicatorTile(indicator: VitalIndicator, onClick: () -> Unit, modifier: Modifier = Modifier, onMeasure: (() -> Unit)? = null)`: Large tile with icon, name, big value with unit, small chart (`Sparkline`), `StatusBadge(displayLevel(indicator))` and a full-width "Measure" button. For `MOOD` it shows neither the numeric value nor the chart (1.1). Used by the Vitals tab.
 
-* `PrimaryActionButton(text: String, onClick: () -> Unit)`: Botón de alto contraste para confirmar mediciones o protocolos médicos.
+* `indicatorIcon(id: String): ImageVector` and `indicatorAccent(id: String): Color`: Decorative icon (from `AppIcons`) and color per indicator. Status is communicated only by `StatusBadge`.
 
-* `ProcedureAnimation(indicatorId: String, modifier: Modifier = Modifier)`: Animacion Lottie en ciclo que muestra como realizar la medicion del indicador. Carga `app/src/main/assets/lottie/<id en minusculas>.json` (ej. `bp_sys.json`); si el archivo no existe no dibuja nada.
+* `EnvironmentScene(env: SpaceEnvironment, modifier: Modifier = Modifier)` (`EnvironmentScene.kt`): Illustrated banner of the environment (spacecraft with Mars in the distance, lunar base with Earth, rover on Mars). `environmentBrush(env)` provides the app background tint.
 
-## 7. Guía de diseño (Design Tokens)
+* `displayLevel(indicator: VitalIndicator): StatusLevel`: Level shown on screen according to the presentation rule in 1.1 (`MOOD` in `CRITICAL` is shown as `WARNING`). Used for badges, colors and the overall status instead of `indicator.level`.
 
-Toda la interfaz utiliza modo oscuro estricto de alto contraste. Ningún archivo dentro de `features/` debe declarar colores hexadecimales quemados (`Color(0xFF...)`); todos deben consumir las constantes de `ui/theme/Color.kt` (alineadas exactamente con los nombres de `StatusLevel`):
+* `HazardTag(hazard: SpaceHazard)`: Informational chip showing which of the 5 HRP hazards is linked to the indicator, with the readable name from `hazardLabel(hazard)`.
 
-* `SpaceBackground` (`0xFF0B0F19`): Fondo general de la aplicación.
+* `StepAnimation(indicatorId: String, stepIndex: Int, accent: Color, displayText: String, modifier: Modifier = Modifier)` (`StepAnimation.kt`): Looping `Canvas` animation showing what to do in each step of `measurementGuide`; `stepIndex` equal to the guide size is the value entry step. No files or network needed.
 
-* `SurfacePanel` (`0xFF161F30`): Fondo de tarjetas, paneles laterales y diálogos modales.
+* `BackPill(accent: Color, text: String = "Back", onClick: () -> Unit)`: Pill-shaped back button with an arrow and a border in the indicator color.
 
-* `StatusNormal` (`0xFF00E676`): Verde indicador nominal (`StatusLevel.NORMAL`).
+* `PrimaryActionButton(text: String, onClick: () -> Unit)`: High-contrast button to confirm measurements or medical protocols.
 
-* `StatusWarning` (`0xFFFFEA00`): Amarillo precaución (`StatusLevel.WARNING`).
+* `ProcedureAnimation(indicatorId: String, modifier: Modifier = Modifier)`: Optional looping Lottie animation. Loads `app/src/main/assets/lottie/<lowercase id>.json` (e.g. `bp_sys.json`); draws nothing if the file does not exist.
 
-* `StatusCritical` (`0xFFFF1744`): Rojo alerta crítica (`StatusLevel.CRITICAL`).
+## 7. Design guide (design tokens)
 
-* `TextPrimary` (`0xFFF8FAFC`): Texto principal blanco hueso.
+The whole interface uses a strict high-contrast dark mode. No file inside `features/` declares hard-coded hex colors (`Color(0xFF...)`); they all use the constants in `ui/theme/Color.kt` (aligned with the `StatusLevel` names):
 
-* `TextSecondary` (`0xFF94A3B8`): Etiquetas secundarias y unidades de medida.
+* `SpaceBackground` (`0xFF0B0F19`): General app background.
 
-* `StatusNormalStrong` (`0xFF15803D`), `StatusWarningStrong` (`0xFFB45309`), `StatusCriticalStrong` (`0xFFC62828`): Fondos de `StatusBadge` con texto blanco (contraste de al menos 5:1). Los colores `Status*` brillantes se usan en lineas, graficas y zonas de la silueta.
+* `SurfacePanel` (`0xFF161F30`): Background of cards, panels and dialogs.
 
-## 8. Fases de trabajo
+* `StatusNormal` (`0xFF00E676`): Nominal green (`StatusLevel.NORMAL`).
 
-### Fase 1: Alineación y Scaffolding
+* `StatusWarning` (`0xFFFFEA00`): Caution yellow (`StatusLevel.WARNING`).
 
-* **Carlos Alberto Jaime Mascareño (Módulo 1):** Inicializa el proyecto en Android Studio (`minSdk 26`), configura GitHub y sube el *scaffolding* completo: `Color.kt`, `Theme.kt`, `Type.kt`, `SharedComponents.kt`, `HealthModels.kt`, `HealthRepository.kt` (con 7 elementos semilla variados dentro del rango normal en cada `history7Days`), un stub de `SimulatorSheet.kt` y el esqueleto de `MainActivity.kt`. Verifica que una `@Preview` simple renderice correctamente consumiendo `HealthRepository`.
+* `StatusCritical` (`0xFFFF1744`): Critical alert red (`StatusLevel.CRITICAL`).
 
-* **Integrante 2 (Módulo 2):** Define el diseño de las 3 zonas de `BodyZone` (`HEAD_MIND`, `THORAX_CARDIO`, `METABOLIC_ENDOCRINE`) y la estructura de dos columnas de `DashboardScreen.kt`.
+* `TextPrimary` (`0xFFF8FAFC`): Off-white primary text.
 
-* **Integrante 3 (Módulo 3):** Estructura el formulario de captura numérica con validación de rango en `AssessmentScreen.kt` y la máquina de estados de intento único (incluyendo detección de salida en falso) en `PvtTestScreen.kt`.
+* `TextSecondary` (`0xFF94A3B8`): Secondary labels and units.
 
-* **Integrante 4 (Módulo 4):** Diseña el componente `TrendLineChart` con `Canvas` y la vista `CountermeasureDetailScreen.kt`.
+* `StatusNormalStrong` (`0xFF15803D`), `StatusWarningStrong` (`0xFFB45309`), `StatusCriticalStrong` (`0xFFC62828`): `StatusBadge` backgrounds with white text (contrast of at least 5:1). The bright `Status*` colors are used for lines, charts and the overall status ring.
 
-### Fase 2: Desarrollo de Módulos en Aislamiento
+## 8. Work phases
 
-* Cada integrante desarrolla su pantalla en la rama `feature/Modulo<N>` de su módulo (tabla de ramas en `README.md`).
+### Phase 1: Alignment and scaffolding
 
-* **Regla de aislamiento:** Nadie hace commit de cambios en `MainActivity.kt` durante esta fase. Para probar cada pantalla se utiliza `@Preview` en Android Studio (o, si se edita temporalmente `MainActivity.kt` para probar en el emulador, se debe revertir antes de hacer commit ejecutando desde la raíz del repositorio: `git restore app/src/main/java/com/softiecare/app/MainActivity.kt`).
+* **Carlos Alberto Jaime Mascareño (Module 1):** Creates the Android Studio project (`minSdk 26`), sets up GitHub and pushes the full scaffolding: `Color.kt`, `Theme.kt`, `Type.kt`, `SharedComponents.kt`, `HealthModels.kt`, `HealthRepository.kt` (with 7 varied seed readings inside the normal range in each `history7Days`), a `SimulatorSheet.kt` stub and the `MainActivity.kt` skeleton. Checks that a simple `@Preview` renders while consuming `HealthRepository`.
 
-### Fase 3: Integración del Ciclo "Evaluate & Act"
+* **Member 2 (Module 2):** Defines the main screen layout of `DashboardScreen.kt`.
 
-* Se hace *merge* de las 4 ramas y Carlos Alberto Jaime Mascareño conecta las pantallas en `MainActivity.kt`.
+* **Member 3 (Module 3):** Builds the numeric entry form with range validation in `AssessmentScreen.kt` and the single-attempt state machine (including false start detection) in `PvtTestScreen.kt`.
 
-* Se verifica el flujo completo:
+* **Member 4 (Module 4):** Designs the `TrendLineChart` component with `Canvas` and the `CountermeasureDetailScreen.kt` view.
 
-  1. Abrir el Simulador (`showSimulator = true`) e inyectar `Scenario.RADIATION_SPIKE` (activa `METABOLIC_ENDOCRINE`), y además capturar un dato manual en `AssessmentScreen` para `"BP_SYS"` o `"HEART_RATE"` (por ejemplo `145.0f` mmHg, para activar también la zona `THORAX_CARDIO` y el peligro `GRAVITY` durante la demostración).
+### Phase 2: Module development in isolation
 
-  2. Observar que la zona correspondiente de la silueta y la fila en `DashboardScreen` cambien a color Amarillo/Rojo al instante.
+* Each member develops their screen on their module's `feature/Modulo<N>` branch (branch table in `README.md`).
 
-  3. Tocar el indicador en alerta para abrir `CountermeasureDetailScreen` y ver la gráfica actualizada de las últimas 7 lecturas.
+* **Isolation rule:** Nobody commits changes to `MainActivity.kt` during this phase. Each screen is tested with `@Preview` in Android Studio (or, if `MainActivity.kt` is edited temporarily to test on the emulator, it is reverted before committing by running from the repository root: `git restore app/src/main/java/com/softiecare/app/MainActivity.kt`).
 
-  4. Presionar "Confirmar Contramedida Ejecutada" y comprobar que el valor regrese a `normalValue` y el color a `StatusNormal`.
+### Phase 3: Integration of the "Evaluate & Act" loop
 
-### Fase 4: Pulido, Expansiones Opcionales y Demo Freeze
+* The 4 branches are merged and Carlos Alberto Jaime Mascareño connects the screens in `MainActivity.kt`.
 
-* **Antes de la entrega:** Congelación total de código (*Code Freeze*), generación del APK instalable de respaldo y grabación del video de demostración.
+* The full flow is verified:
 
-## 9. Requisitos técnicos comunes (Checklist para los 4 módulos)
+  1. Open the Simulator (`showSimulator = true`) and inject `Scenario.RADIATION_SPIKE`, and also enter a manual value in `AssessmentScreen` for `"BP_SYS"` or `"HEART_RATE"` (for example `145.0f` mmHg, to also trigger the `GRAVITY` hazard during the demo).
 
-Cada módulo entregado debe cumplir con lo siguiente antes de hacer Pull Request a `Main`:
+  2. Check that the overall status and the "Needs attention" section of the Today tab change instantly.
 
-* Lectura de estado reactivo desde `HealthRepository` mediante `collectAsState()`, y escritura invocando exclusivamente los métodos públicos de `HealthRepository` (sección 4.2).
+  3. Tap the indicator in alert to open `CountermeasureDetailScreen` and see the updated chart of the last 7 readings.
 
-* Uso exclusivo de los colores de `ui/theme/Color.kt` (`StatusNormal`, `StatusWarning`, `StatusCritical`) y componentes de `ui/components/SharedComponents.kt`.
+  4. Press "Start countermeasure", check the plan steps, wait, and confirm that the re-measure notification appears. Press "Measure again" (or the notification), enter an in-range value and check that the level changes to `NORMAL`.
 
-* Respeto exacto a las firmas de funciones definidas en la sección 4.2.
+### Phase 4: Polish, optional extensions and demo freeze
 
-* Toda etiqueta o color de nivel en pantalla usa `displayLevel(indicator)` (sección 6), no `indicator.level` directo.
+* **Before submission:** Full code freeze, backup installable APK and demo video recording.
 
-* Validación de entrada en `AssessmentScreen`: convertir con `toFloatOrNull()` y verificar que el valor esté dentro del rango válido de captura de la tabla 4.3 (ej. no permitir números negativos, y restringir `"MOOD"` a `1.0f..5.0f` y `"SLEEP"` a `0.0f..24.0f`) antes de invocar `HealthRepository.updateIndicatorValue(id, floatValue)`.
+## 9. Common technical requirements (checklist for the 4 modules)
 
-## 10. Nivel de "terminado" y despliegue
+Each delivered module meets the following before a Pull Request to `Main`:
 
-**Mínimo indispensable (MVP):** La aplicación compila sin errores en Android Studio, corre en el emulador o dispositivo físico y cumple los requisitos de la sección 1.2.
+* Reads reactive state from `HealthRepository` with `collectAsState()` and writes only through the public `HealthRepository` methods (section 4.2).
+
+* Uses only the colors in `ui/theme/Color.kt` and the components in `ui/components/`.
+
+* Follows the function signatures in section 4.2 exactly.
+
+* Every on-screen level badge or color uses `displayLevel(indicator)` (section 6), never `indicator.level` directly.
+
+* Input validation in `AssessmentScreen`: convert with `toFloatOrNull()` and check that the value is inside the valid capture range in table 4.3 (e.g. no negative numbers, `"MOOD"` limited to `1.0f..5.0f` and `"SLEEP"` to `0.0f..24.0f`) before calling `HealthRepository.updateIndicatorValue(id, floatValue)`.
+
+* All interface text is in English (NFR-03).
+
+## 10. Definition of done and deployment
+
+**Minimum viable product (MVP):** The app builds without errors in Android Studio, runs on the emulator or a physical device and meets the requirements in section 1.2.

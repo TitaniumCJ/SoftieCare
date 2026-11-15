@@ -9,7 +9,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-// Pruebas de las reglas del Blueprint 4.3 y de docs/guia_datos.md
+// Tests for the Blueprint 4.3 rules and docs/data_guide.md
 class HealthRepositoryTest {
 
     private fun ind(id: String): VitalIndicator =
@@ -23,7 +23,7 @@ class HealthRepositoryTest {
     }
 
     @Test
-    fun cortesBpSys() {
+    fun cutoffsBpSys() {
         assertEquals(StatusLevel.CRITICAL, level("BP_SYS", 89.99f))
         assertEquals(StatusLevel.WARNING, level("BP_SYS", 90f))
         assertEquals(StatusLevel.WARNING, level("BP_SYS", 94.99f))
@@ -35,7 +35,7 @@ class HealthRepositoryTest {
     }
 
     @Test
-    fun cortesHeartRate() {
+    fun cutoffsHeartRate() {
         assertEquals(StatusLevel.CRITICAL, level("HEART_RATE", 49.99f))
         assertEquals(StatusLevel.WARNING, level("HEART_RATE", 50f))
         assertEquals(StatusLevel.WARNING, level("HEART_RATE", 59.99f))
@@ -47,7 +47,7 @@ class HealthRepositoryTest {
     }
 
     @Test
-    fun cortesGlucose() {
+    fun cutoffsGlucose() {
         assertEquals(StatusLevel.CRITICAL, level("GLUCOSE", 59.99f))
         assertEquals(StatusLevel.WARNING, level("GLUCOSE", 60f))
         assertEquals(StatusLevel.WARNING, level("GLUCOSE", 69.99f))
@@ -59,7 +59,7 @@ class HealthRepositoryTest {
     }
 
     @Test
-    fun cortesTemp() {
+    fun cutoffsTemp() {
         assertEquals(StatusLevel.CRITICAL, level("TEMP", 35.49f))
         assertEquals(StatusLevel.WARNING, level("TEMP", 35.5f))
         assertEquals(StatusLevel.WARNING, level("TEMP", 36.09f))
@@ -71,7 +71,7 @@ class HealthRepositoryTest {
     }
 
     @Test
-    fun cortesSleep() {
+    fun cutoffsSleep() {
         assertEquals(StatusLevel.CRITICAL, level("SLEEP", 5.49f))
         assertEquals(StatusLevel.WARNING, level("SLEEP", 5.5f))
         assertEquals(StatusLevel.WARNING, level("SLEEP", 6.99f))
@@ -83,7 +83,7 @@ class HealthRepositoryTest {
     }
 
     @Test
-    fun cortesMood() {
+    fun cutoffsMood() {
         assertEquals(StatusLevel.CRITICAL, level("MOOD", 2.49f))
         assertEquals(StatusLevel.WARNING, level("MOOD", 2.5f))
         assertEquals(StatusLevel.WARNING, level("MOOD", 3.99f))
@@ -91,102 +91,103 @@ class HealthRepositoryTest {
     }
 
     @Test
-    fun semillasEnRangoNormal() {
+    fun seedsInNormalRange() {
         HealthRepository.indicators.value.forEach { i ->
-            assertEquals("${i.id} tiene 7 lecturas", 7, i.history7Days.size)
-            assertEquals("${i.id} ultima lectura", i.normalValue, i.history7Days.last())
+            assertEquals("${i.id} has 7 readings", 7, i.history7Days.size)
+            assertEquals("${i.id} last reading", i.normalValue, i.history7Days.last())
             i.history7Days.forEach { v ->
-                assertEquals("${i.id} lectura $v", StatusLevel.NORMAL, level(i.id, v))
+                assertEquals("${i.id} reading $v", StatusLevel.NORMAL, level(i.id, v))
             }
         }
     }
 
     @Test
-    fun capturaRotaHistorial() {
-        val antes = ind("BP_SYS").history7Days
+    fun entryRotatesHistory() {
+        val before = ind("BP_SYS").history7Days
         HealthRepository.updateIndicatorValue("BP_SYS", 145f)
         val i = ind("BP_SYS")
         assertEquals(145f, i.currentValue)
         assertEquals(StatusLevel.CRITICAL, i.level)
         assertEquals(7, i.history7Days.size)
-        assertEquals(antes.drop(1) + 145f, i.history7Days)
+        assertEquals(before.drop(1) + 145f, i.history7Days)
     }
 
     @Test
-    fun contramedidaRestauraNominal() {
+    fun newMeasurementAfterCountermeasureReclassifies() {
+        // The countermeasure does not fix the value: the new measurement does
         HealthRepository.updateIndicatorValue("TEMP", 38.4f)
-        HealthRepository.applyCountermeasure("TEMP")
+        assertEquals(StatusLevel.CRITICAL, ind("TEMP").level)
+        HealthRepository.updateIndicatorValue("TEMP", 36.8f)
         val i = ind("TEMP")
-        assertEquals(i.normalValue, i.currentValue)
         assertEquals(StatusLevel.NORMAL, i.level)
-        assertEquals(i.normalValue, i.history7Days.last())
+        assertEquals(listOf(38.4f, 36.8f), i.history7Days.takeLast(2))
         assertEquals(7, i.history7Days.size)
     }
 
     @Test
-    fun pvtRapidoNoCambiaNada() {
-        val antes = ind("MOOD")
+    fun fastPvtChangesNothing() {
+        val before = ind("MOOD")
         HealthRepository.recordPvtResult(300L)
         HealthRepository.recordPvtResult(380L)
-        assertEquals(antes, ind("MOOD"))
+        assertEquals(before, ind("MOOD"))
     }
 
     @Test
-    fun pvtIntermedioBajaA3() {
+    fun mediumPvtLowersTo3() {
         HealthRepository.recordPvtResult(381L)
         assertEquals(3.0f, ind("MOOD").currentValue)
         assertEquals(StatusLevel.WARNING, ind("MOOD").level)
     }
 
     @Test
-    fun pvtLentoBajaA2() {
+    fun slowPvtLowersTo2() {
         HealthRepository.recordPvtResult(501L)
         assertEquals(2.0f, ind("MOOD").currentValue)
         assertEquals(StatusLevel.CRITICAL, ind("MOOD").level)
     }
 
     @Test
-    fun pvtNoDuplicaNiMejora() {
+    fun pvtNeitherDuplicatesNorImproves() {
         HealthRepository.recordPvtResult(600L)
-        val despuesDelLento = ind("MOOD")
+        val afterSlow = ind("MOOD")
         HealthRepository.recordPvtResult(600L)
         HealthRepository.recordPvtResult(450L)
-        assertEquals(despuesDelLento, ind("MOOD"))
+        assertEquals(afterSlow, ind("MOOD"))
     }
 
     @Test
-    fun escenarioRadiacionSoloTemp() {
-        val antes = HealthRepository.indicators.value
+    fun radiationScenarioOnlyTemp() {
+        val before = HealthRepository.indicators.value
         HealthRepository.injectScenario(Scenario.RADIATION_SPIKE)
-        val despues = HealthRepository.indicators.value
+        val after = HealthRepository.indicators.value
         assertEquals(38.4f, ind("TEMP").currentValue)
         assertEquals(StatusLevel.CRITICAL, ind("TEMP").level)
-        antes.zip(despues).filter { it.first.id != "TEMP" }.forEach {
-            assertEquals("${it.first.id} no debe cambiar", it.first, it.second)
+        before.zip(after).filter { it.first.id != "TEMP" }.forEach {
+            assertEquals("${it.first.id} must not change", it.first, it.second)
         }
     }
 
     @Test
-    fun escenarioFatigaSoloSleepYMood() {
-        val antes = HealthRepository.indicators.value
+    fun fatigueScenarioOnlySleepAndMood() {
+        val before = HealthRepository.indicators.value
         HealthRepository.injectScenario(Scenario.ISOLATION_FATIGUE)
         assertEquals(4.5f, ind("SLEEP").currentValue)
         assertEquals(StatusLevel.CRITICAL, ind("SLEEP").level)
         assertEquals(2.0f, ind("MOOD").currentValue)
         assertEquals(StatusLevel.CRITICAL, ind("MOOD").level)
-        val despues = HealthRepository.indicators.value
-        antes.zip(despues).filter { it.first.id !in setOf("SLEEP", "MOOD") }.forEach {
-            assertEquals("${it.first.id} no debe cambiar", it.first, it.second)
+        val after = HealthRepository.indicators.value
+        before.zip(after).filter { it.first.id !in setOf("SLEEP", "MOOD") }.forEach {
+            assertEquals("${it.first.id} must not change", it.first, it.second)
         }
     }
 
     @Test
-    fun nominalRestauraTodo() {
+    fun nominalResetsAll() {
         val inicial = HealthRepository.indicators.value
         HealthRepository.injectScenario(Scenario.ISOLATION_FATIGUE)
         HealthRepository.updateIndicatorValue("BP_SYS", 145f)
         HealthRepository.injectScenario(Scenario.NOMINAL)
         assertEquals(inicial, HealthRepository.indicators.value)
-        assertTrue("todos estables", HealthRepository.indicators.value.all { it.level == StatusLevel.NORMAL })
+        assertTrue("all stable", HealthRepository.indicators.value.all { it.level == StatusLevel.NORMAL })
     }
 }

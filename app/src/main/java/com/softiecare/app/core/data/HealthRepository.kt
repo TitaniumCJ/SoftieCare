@@ -23,7 +23,7 @@ object HealthRepository {
         _environment.value = env
     }
 
-    // Cortes continuos de la seccion 4.3: CRITICAL -> WARNING -> NORMAL
+    // Continuous cutoffs from section 4.3: CRITICAL -> WARNING -> NORMAL
     fun evaluateLevel(id: String, v: Float): StatusLevel = when (id) {
         "BP_SYS" -> when {
             v < 90f || v >= 140f -> StatusLevel.CRITICAL
@@ -68,16 +68,6 @@ object HealthRepository {
         }
     }
 
-    fun applyCountermeasure(id: String) {
-        updateById(id) {
-            it.copy(
-                currentValue = it.normalValue,
-                level = StatusLevel.NORMAL,
-                history7Days = it.history7Days.drop(1) + it.normalValue
-            )
-        }
-    }
-
     fun recordPvtResult(reactionTimeMs: Long) {
         val target = when {
             reactionTimeMs > 500L -> 2.0f
@@ -85,7 +75,7 @@ object HealthRepository {
             else -> return
         }
         val currentMood = _indicators.value.firstOrNull { it.id == "MOOD" }?.currentValue ?: return
-        // Solo empeora el animo y evita lecturas repetidas en history7Days
+        // Only worsens mood and avoids repeated readings in history7Days
         if (currentMood > target) {
             updateIndicatorValue("MOOD", target)
         }
@@ -106,11 +96,11 @@ object HealthRepository {
         _indicators.update { list -> list.map { if (it.id == id) transform(it) else it } }
     }
 
-    // Semilla: 7 lecturas dentro del rango NORMAL, la ultima igual a normalValue
+    // Seed: 7 readings within the NORMAL range, the last one equal to normalValue
     private fun seedIndicators(): List<VitalIndicator> = listOf(
         VitalIndicator(
             id = "BP_SYS",
-            name = "Presion Sistolica",
+            name = "Systolic Blood Pressure",
             currentValue = 120.0f,
             normalValue = 120.0f,
             unit = "mmHg",
@@ -119,15 +109,15 @@ object HealthRepository {
             primaryHazard = SpaceHazard.GRAVITY,
             history7Days = listOf(118.0f, 122.0f, 119.0f, 124.0f, 117.0f, 121.0f, 120.0f),
             measurementGuide = listOf(
-                "Permanecer sentado en reposo durante 5 minutos",
-                "Colocar el brazalete en el brazo a la altura del corazon",
-                "Registrar solo el valor sistolico en mmHg"
+                "Sit and rest for 5 minutes",
+                "Place the cuff on the upper arm at heart level",
+                "Record only the systolic value in mmHg"
             ),
-            countermeasureProtocol = "Reposo sentado 10 minutos, hidratacion con 500 ml de agua y nueva medicion. Si persiste, usar prenda de compresion en piernas y notificar al oficial medico de a bordo."
+            countermeasureProtocol = "Seated rest for 10 minutes, drink 500 ml of water and measure again. If it persists, use the leg compression garment and notify the onboard medical officer."
         ),
         VitalIndicator(
             id = "HEART_RATE",
-            name = "Frecuencia Cardiaca",
+            name = "Heart Rate",
             currentValue = 72.0f,
             normalValue = 72.0f,
             unit = "bpm",
@@ -136,15 +126,15 @@ object HealthRepository {
             primaryHazard = SpaceHazard.GRAVITY,
             history7Days = listOf(70.0f, 74.0f, 71.0f, 76.0f, 69.0f, 73.0f, 72.0f),
             measurementGuide = listOf(
-                "Permanecer en reposo durante 5 minutos",
-                "Colocar el sensor de pulso en el dedo indice",
-                "Registrar el valor estable en bpm"
+                "Rest for 5 minutes",
+                "Place the pulse sensor on the index finger",
+                "Record the stable value in bpm"
             ),
-            countermeasureProtocol = "Respiracion controlada durante 5 minutos, hidratacion y nueva medicion en 15 minutos. Suspender ejercicio intenso hasta normalizar."
+            countermeasureProtocol = "Controlled breathing for 5 minutes, hydration and a new measurement in 15 minutes. Avoid intense exercise until it normalizes."
         ),
         VitalIndicator(
             id = "GLUCOSE",
-            name = "Glucosa en Ayunas",
+            name = "Fasting Glucose",
             currentValue = 90.0f,
             normalValue = 90.0f,
             unit = "mg/dL",
@@ -153,15 +143,15 @@ object HealthRepository {
             primaryHazard = SpaceHazard.HOSTILE_ENVIRONMENT,
             history7Days = listOf(88.0f, 92.0f, 87.0f, 94.0f, 89.0f, 91.0f, 90.0f),
             measurementGuide = listOf(
-                "Confirmar al menos 8 horas de ayuno",
-                "Limpiar el dedo y usar una lanceta nueva",
-                "Colocar la gota en la tira y registrar el valor en mg/dL"
+                "Confirm at least 8 hours of fasting",
+                "Clean the finger and use a new lancet",
+                "Place the drop on the strip and record the value in mg/dL"
             ),
-            countermeasureProtocol = "Valor bajo: ingerir 15 g de carbohidratos de rapida absorcion y medir en 15 minutos. Valor alto: hidratacion y revision de la racion de dieta del habitat."
+            countermeasureProtocol = "Low value: take 15 g of fast-acting carbohydrates and measure again in 15 minutes. High value: hydration and review of the habitat diet ration."
         ),
         VitalIndicator(
             id = "TEMP",
-            name = "Temperatura Corporal",
+            name = "Body Temperature",
             currentValue = 36.6f,
             normalValue = 36.6f,
             unit = "°C",
@@ -170,15 +160,15 @@ object HealthRepository {
             primaryHazard = SpaceHazard.RADIATION,
             history7Days = listOf(36.5f, 36.7f, 36.4f, 36.8f, 36.5f, 36.7f, 36.6f),
             measurementGuide = listOf(
-                "No comer ni beber durante los 15 minutos previos",
-                "Colocar el termometro bajo la lengua",
-                "Esperar la senal y registrar el valor en °C"
+                "Do not eat or drink during the previous 15 minutes",
+                "Place the thermometer under the tongue",
+                "Wait for the beep and record the value in °C"
             ),
-            countermeasureProtocol = "Reposo en el area con mayor blindaje del habitat, hidratacion y control de temperatura cada 30 minutos."
+            countermeasureProtocol = "Rest in the most shielded area of the habitat, hydration and temperature checks every 30 minutes."
         ),
         VitalIndicator(
             id = "SLEEP",
-            name = "Horas de Sueño",
+            name = "Sleep Hours",
             currentValue = 7.5f,
             normalValue = 7.5f,
             unit = "hrs",
@@ -187,15 +177,15 @@ object HealthRepository {
             primaryHazard = SpaceHazard.ISOLATION,
             history7Days = listOf(7.3f, 7.8f, 7.1f, 8.0f, 7.4f, 7.6f, 7.5f),
             measurementGuide = listOf(
-                "Revisar la hora de inicio del sueño",
-                "Revisar la hora de despertar",
-                "Registrar el total de horas dormidas"
+                "Check the time sleep started",
+                "Check the wake-up time",
+                "Record the total hours slept"
             ),
-            countermeasureProtocol = "Ajustar la iluminacion del modulo a luz calida, posponer tareas no criticas y programar un periodo de descanso de 8 horas."
+            countermeasureProtocol = "Set the module lighting to warm light, postpone non-critical tasks and schedule an 8-hour rest period."
         ),
         VitalIndicator(
             id = "MOOD",
-            name = "Estado Conductual",
+            name = "Behavioral State",
             currentValue = 4.5f,
             normalValue = 4.5f,
             unit = "pts",
@@ -204,11 +194,11 @@ object HealthRepository {
             primaryHazard = SpaceHazard.ISOLATION,
             history7Days = listOf(4.3f, 4.6f, 4.2f, 4.8f, 4.4f, 4.7f, 4.5f),
             measurementGuide = listOf(
-                "Ubicarse en un lugar tranquilo del modulo",
-                "Evaluar animo y nivel de alerta de 1 (muy bajo) a 5 (optimo)",
-                "Registrar el valor que mejor describa el estado actual"
+                "Find a quiet place in the module",
+                "Rate mood and alertness from 1 (very low) to 5 (optimal)",
+                "Record the value that best describes the current state"
             ),
-            countermeasureProtocol = "Programar un mensaje diferido con familia, 20 minutos de ejercicio y una actividad recreativa del plan de tripulacion."
+            countermeasureProtocol = "Schedule a delayed message with family, 20 minutes of exercise and a recreational activity from the crew plan."
         )
     )
 }

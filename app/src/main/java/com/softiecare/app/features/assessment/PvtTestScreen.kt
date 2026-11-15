@@ -53,7 +53,7 @@ fun PvtTestScreen(onBack: () -> Unit) {
     val indicators by HealthRepository.indicators.collectAsState()
     val mood = indicators.firstOrNull { it.id == "MOOD" }
 
-    // Cada cambio de fase cancela la espera anterior (un toque anticipado corta el delay)
+    // Each phase change cancels the previous wait (an early tap cuts the delay)
     LaunchedEffect(phase) {
         when (phase) {
             PvtPhase.Waiting -> {
@@ -79,14 +79,14 @@ fun PvtTestScreen(onBack: () -> Unit) {
             .fillMaxSize()
             .background(background)
             .pointerInput(phase) {
-                // onPress mide al contacto, no al soltar el dedo
+                // onPress measures on contact, not on release
                 detectTapGestures(onPress = {
                     when (val p = phase) {
                         PvtPhase.Waiting -> phase = PvtPhase.FalseStart
                         is PvtPhase.Stimulus -> {
                             val ms = SystemClock.uptimeMillis() - p.shownAtMs
                             HealthRepository.recordPvtResult(ms)
-                            println("Resultado PVT registrado")
+                            println("PVT result recorded")
                             phase = PvtPhase.Result(ms)
                         }
                         else -> Unit
@@ -96,7 +96,7 @@ fun PvtTestScreen(onBack: () -> Unit) {
     ) {
         if (phase == PvtPhase.Ready || phase is PvtPhase.Result) {
             TextButton(onClick = onBack, modifier = Modifier.align(Alignment.TopStart)) {
-                Text("← Volver", color = TextSecondary)
+                Text("← Back", color = TextSecondary)
             }
         }
 
@@ -110,7 +110,7 @@ fun PvtTestScreen(onBack: () -> Unit) {
             when (val p = phase) {
                 PvtPhase.Ready -> {
                     Text(
-                        "Test de Vigilancia Psicomotora",
+                        "Psychomotor Vigilance Test",
                         color = TextPrimary,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
@@ -118,26 +118,26 @@ fun PvtTestScreen(onBack: () -> Unit) {
                     )
                     Spacer(Modifier.height(16.dp))
                     Text(
-                        "Al ponerse verde la pantalla, tocarla lo más rápido posible. " +
-                            "Un toque antes de tiempo reinicia el intento.",
+                        "When the screen turns green, tap it as fast as possible. " +
+                            "An early tap restarts the attempt.",
                         color = TextSecondary,
                         textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.height(32.dp))
-                    PrimaryActionButton(text = "Iniciar prueba", onClick = { phase = PvtPhase.Waiting })
+                    PrimaryActionButton(text = "Start test", onClick = { phase = PvtPhase.Waiting })
                 }
 
-                PvtPhase.Waiting -> Text("Espera el verde...", color = TextPrimary, fontSize = 28.sp)
+                PvtPhase.Waiting -> Text("Wait for green...", color = TextPrimary, fontSize = 28.sp)
 
                 is PvtPhase.Stimulus -> Text(
-                    "¡TOCA!",
+                    "TAP!",
                     color = SpaceBackground,
                     fontSize = 48.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 PvtPhase.FalseStart -> Text(
-                    "Salida en falso — reintentar",
+                    "False start — retry",
                     color = TextPrimary,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
@@ -153,13 +153,13 @@ fun PvtTestScreen(onBack: () -> Unit) {
                     )
                     Spacer(Modifier.height(16.dp))
                     if (mood != null) {
-                        // Blueprint 1.1: sin valor numerico del animo y nunca "CRITICO"
+                        // Blueprint 1.1: no mood numeric value and never "CRITICAL"
                         Text(mood.name, color = TextSecondary)
                         Spacer(Modifier.height(8.dp))
                         StatusBadge(level = displayLevel(mood))
                     }
                     Spacer(Modifier.height(32.dp))
-                    PrimaryActionButton(text = "Repetir prueba", onClick = { phase = PvtPhase.Waiting })
+                    PrimaryActionButton(text = "Repeat test", onClick = { phase = PvtPhase.Waiting })
                 }
             }
         }

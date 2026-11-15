@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Tema oscuro desde el arranque para evitar el destello blanco antes de Compose -->
+    <!-- Dark theme from launch to avoid a white flash before Compose -->
     <style name="Theme.SoftieCare" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">@color/space_background</item>
     </style>

@@ -8,8 +8,8 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 
-// Busca app/src/main/assets/lottie/<id en minusculas>.json (ej. bp_sys.json)
-// Si el archivo no existe, la composicion queda en null y no se dibuja nada
+// Loads app/src/main/assets/lottie/<lowercase id>.json (e.g. bp_sys.json)
+// If the file does not exist, the composition stays null and nothing is drawn
 @Composable
 fun ProcedureAnimation(indicatorId: String, modifier: Modifier = Modifier) {
     val composition by rememberLottieComposition(

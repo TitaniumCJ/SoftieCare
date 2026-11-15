@@ -1,24 +1,26 @@
-# Animaciones de procedimiento
+# Procedure animations (optional)
 
-`ProcedureAnimation` (ui/components) carga de esta carpeta un archivo por indicador. El nombre es el id en minusculas:
+`ProcedureAnimation` (ui/components) loads one file per indicator from this folder. The file name is the lowercase id:
 
-| Archivo | Indicador | Que debe mostrar |
+| File | Indicator | What it must show |
 | ----- | ----- | ----- |
-| `bp_sys.json` | Presion sistolica | Brazalete en el brazo a la altura del corazon |
-| `heart_rate.json` | Frecuencia cardiaca | Sensor de pulso en el dedo |
-| `glucose.json` | Glucosa | Gota del dedo a la tira del glucometro |
-| `temp.json` | Temperatura | Termometro bajo la lengua |
-| `sleep.json` | Sueño | Horas de sueño (reloj o luna) |
-| `mood.json` | Estado conductual | Escala de animo y alerta |
+| `bp_sys.json` | Systolic blood pressure | Cuff on the upper arm at heart level |
+| `heart_rate.json` | Heart rate | Pulse sensor on the finger |
+| `glucose.json` | Glucose | Drop from the finger to the glucose meter strip |
+| `temp.json` | Temperature | Thermometer under the tongue |
+| `sleep.json` | Sleep | Sleep hours (clock or moon) |
+| `mood.json` | Behavioral state | Mood and alertness scale |
 
-Reglas:
+Rules:
 
-- Formato: Lottie JSON (no dotLottie).
-- Solo animaciones gratuitas de LottieFiles (Lottie Simple License) o propias.
-- Revisar que la animacion muestre el procedimiento correcto antes de agregarla.
-- Si falta un archivo, la app no falla: simplemente no muestra animacion.
+- Format: Lottie JSON (not dotLottie).
+- Only free LottieFiles animations (Lottie Simple License) or our own.
+- Check that the animation shows the correct procedure before adding it.
+- If a file is missing the app does not fail: it simply shows no animation.
 
-## Creditos
+The guided measurement already shows a built-in `Canvas` animation per step (`StepAnimation`), so these files are optional.
 
-| Archivo | Animacion | Autor | URL |
+## Credits
+
+| File | Animation | Author | URL |
 | ----- | ----- | ----- | ----- |

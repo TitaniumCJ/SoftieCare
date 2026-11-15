@@ -1,13 +1,11 @@
 package com.softiecare.app.features.dashboard
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,13 +16,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,22 +32,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.softiecare.app.core.data.HealthRepository
-import com.softiecare.app.core.model.BodyZone
 import com.softiecare.app.core.model.SpaceEnvironment
 import com.softiecare.app.core.model.StatusLevel
 import com.softiecare.app.core.model.VitalIndicator
+import com.softiecare.app.ui.components.AppIcons
+import com.softiecare.app.ui.components.EnvironmentScene
 import com.softiecare.app.ui.components.PrimaryActionButton
-import com.softiecare.app.ui.components.IndicatorTile
+import com.softiecare.app.ui.components.StatusBadge
 import com.softiecare.app.ui.components.displayLevel
+import com.softiecare.app.ui.components.environmentLabel
+import com.softiecare.app.ui.components.indicatorAccent
+import com.softiecare.app.ui.components.indicatorIcon
 import com.softiecare.app.ui.components.statusColor
+import com.softiecare.app.ui.components.statusLabel
 import com.softiecare.app.ui.theme.SoftieCareTheme
 import com.softiecare.app.ui.theme.SpaceBackground
 import com.softiecare.app.ui.theme.StatusNormal
@@ -55,106 +58,131 @@ import com.softiecare.app.ui.theme.SurfacePanel
 import com.softiecare.app.ui.theme.TextPrimary
 import com.softiecare.app.ui.theme.TextSecondary
 
+// "Today" tab: environment, overall status and only what needs attention
 @Composable
 fun DashboardScreen(
     onIndicatorClick: (String) -> Unit,
-    onOpenAssessment: (String) -> Unit,
     onOpenPvtTest: () -> Unit,
-    onOpenSimulator: () -> Unit
+    onOpenSimulator: () -> Unit,
+    onOpenAbout: () -> Unit
 ) {
     val indicators by HealthRepository.indicators.collectAsState()
     val environment by HealthRepository.environment.collectAsState()
+    val attention = indicators.filter { displayLevel(it) != StatusLevel.NORMAL }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(SpaceBackground)
-            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Header(environment = environment, onOpenSimulator = onOpenSimulator)
-        Spacer(Modifier.height(16.dp))
+        Header(onOpenSimulator, onOpenAbout)
+        EnvironmentScene(environment)
+        EnvironmentSelector(environment)
+        OverallStatusCard(indicators)
 
-        // Dos columnas en pantallas anchas y una sola columna en telefono vertical
-        BoxWithConstraints(Modifier.fillMaxSize()) {
-            if (maxWidth >= 600.dp) {
-                Row(Modifier.fillMaxSize()) {
-                    BodyPanel(
-                        indicators = indicators,
-                        onIndicatorClick = onIndicatorClick,
-                        modifier = Modifier
-                            .weight(0.4f)
-                            .verticalScroll(rememberScrollState())
-                    )
-                    Spacer(Modifier.width(16.dp))
-                    IndicatorList(
-                        indicators = indicators,
-                        onIndicatorClick = onIndicatorClick,
-                        onOpenAssessment = onOpenAssessment,
-                        onOpenPvtTest = onOpenPvtTest,
-                        modifier = Modifier
-                            .weight(0.6f)
-                            .verticalScroll(rememberScrollState())
-                    )
-                }
-            } else {
-                Column(
-                    Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    BodyPanel(
-                        indicators = indicators,
-                        onIndicatorClick = onIndicatorClick,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    IndicatorList(
-                        indicators = indicators,
-                        onIndicatorClick = onIndicatorClick,
-                        onOpenAssessment = onOpenAssessment,
-                        onOpenPvtTest = onOpenPvtTest,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
+        SectionTitle(if (attention.isEmpty()) "No alerts" else "Needs attention")
+        if (attention.isEmpty()) {
+            InfoCard("All indicators are within the stable range.")
+        } else {
+            attention.forEach { AttentionRow(it) { onIndicatorClick(it.id) } }
         }
+
+        PrimaryActionButton(text = "Reaction test (PVT)", onClick = onOpenPvtTest)
+        Spacer(Modifier.height(72.dp))
     }
 }
 
 @Composable
-private fun Header(environment: SpaceEnvironment, onOpenSimulator: () -> Unit) {
-    Column {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+private fun Header(onOpenSimulator: () -> Unit, onOpenAbout: () -> Unit) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
+            Text("Crew health monitoring", color = TextSecondary, style = MaterialTheme.typography.bodySmall)
             Text(
                 text = "SoftieCare",
                 color = TextPrimary,
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f)
+                fontWeight = FontWeight.Bold
             )
-            TextButton(onClick = onOpenSimulator) {
-                Text(text = "Simulador", color = TextPrimary)
-            }
         }
+        TextButton(onClick = onOpenSimulator) {
+            Icon(AppIcons.Tune, contentDescription = null, tint = TextPrimary, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(6.dp))
+            Text("Simulator", color = TextPrimary)
+        }
+        IconButton(onClick = onOpenAbout) {
+            Icon(AppIcons.Info, contentDescription = "About SoftieCare", tint = TextPrimary)
+        }
+    }
+}
 
-        Spacer(Modifier.height(8.dp))
+// Environment selector: visual context only (Blueprint 1.1, RF-03)
+@Composable
+private fun EnvironmentSelector(environment: SpaceEnvironment) {
+    Row(
+        modifier = Modifier.horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        SpaceEnvironment.values().forEach { env ->
+            FilterChip(
+                selected = env == environment,
+                onClick = { HealthRepository.setEnvironment(env) },
+                label = { Text(environmentLabel(env)) },
+                colors = FilterChipDefaults.filterChipColors(
+                    containerColor = SurfacePanel,
+                    labelColor = TextSecondary,
+                    selectedContainerColor = StatusNormal.copy(alpha = 0.18f),
+                    selectedLabelColor = StatusNormal
+                )
+            )
+        }
+    }
+}
 
-        // Selector de entorno: solo contexto visual (Blueprint 1.1, RF-03)
-        Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            SpaceEnvironment.values().forEach { env ->
-                FilterChip(
-                    selected = env == environment,
-                    onClick = { HealthRepository.setEnvironment(env) },
-                    label = { Text(environmentLabel(env)) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        containerColor = SurfacePanel,
-                        labelColor = TextSecondary,
-                        selectedContainerColor = SurfacePanel,
-                        selectedLabelColor = StatusNormal
+// Ring with the share of stable indicators and the worst displayed level
+@Composable
+private fun OverallStatusCard(indicators: List<VitalIndicator>) {
+    val total = indicators.size.coerceAtLeast(1)
+    val stable = indicators.count { displayLevel(it) == StatusLevel.NORMAL }
+    val overall = indicators.maxOfOrNull { displayLevel(it) } ?: StatusLevel.NORMAL
+    val color = statusColor(overall)
+
+    Surface(color = SurfacePanel, shape = RoundedCornerShape(20.dp), modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(88.dp), contentAlignment = Alignment.Center) {
+                Canvas(Modifier.fillMaxSize()) {
+                    val stroke = 10.dp.toPx()
+                    drawArc(
+                        color = TextSecondary.copy(alpha = 0.2f),
+                        startAngle = -90f,
+                        sweepAngle = 360f,
+                        useCenter = false,
+                        style = Stroke(stroke)
                     )
+                    drawArc(
+                        color = color,
+                        startAngle = -90f,
+                        sweepAngle = 360f * stable / total,
+                        useCenter = false,
+                        style = Stroke(stroke, cap = StrokeCap.Round)
+                    )
+                }
+                Text("$stable/$total", color = TextPrimary, fontWeight = FontWeight.Bold)
+            }
+            Spacer(Modifier.width(16.dp))
+            Column {
+                Text("Overall status", color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = statusLabel(overall),
+                    color = color,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "$stable of $total indicators stable",
+                    color = TextSecondary,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
@@ -162,108 +190,56 @@ private fun Header(environment: SpaceEnvironment, onOpenSimulator: () -> Unit) {
 }
 
 @Composable
-private fun BodyPanel(
-    indicators: List<VitalIndicator>,
-    onIndicatorClick: (String) -> Unit,
-    modifier: Modifier
-) {
-    Column(
-        modifier = modifier
-            .background(SurfacePanel, RoundedCornerShape(16.dp))
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        ZoneBlock(BodyZone.HEAD_MIND, indicators, CircleShape, 80.dp, 80.dp, onIndicatorClick)
-        ZoneBlock(BodyZone.THORAX_CARDIO, indicators, RoundedCornerShape(24.dp), 150.dp, 120.dp, onIndicatorClick)
-        ZoneBlock(BodyZone.METABOLIC_ENDOCRINE, indicators, RoundedCornerShape(20.dp), 130.dp, 100.dp, onIndicatorClick)
-    }
-}
-
-@Composable
-private fun ZoneBlock(
-    zone: BodyZone,
-    indicators: List<VitalIndicator>,
-    shape: Shape,
-    width: Dp,
-    height: Dp,
-    onIndicatorClick: (String) -> Unit
-) {
-    // El enum esta ordenado NORMAL < WARNING < CRITICAL, por eso el maximo es el peor estado de la zona
-    val worst = indicators.filter { it.bodyZone == zone }.maxByOrNull { displayLevel(it) }
-    val level = worst?.let { displayLevel(it) } ?: StatusLevel.NORMAL
-    val color = statusColor(level)
-
-    Box(
-        modifier = Modifier
-            .size(width, height)
-            .clip(shape)
-            .background(color.copy(alpha = 0.2f))
-            .border(2.dp, color, shape)
-            .clickable(enabled = worst != null) { worst?.let { onIndicatorClick(it.id) } },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = zoneLabel(zone),
-            color = TextPrimary,
-            style = MaterialTheme.typography.labelMedium,
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-private fun IndicatorList(
-    indicators: List<VitalIndicator>,
-    onIndicatorClick: (String) -> Unit,
-    onOpenAssessment: (String) -> Unit,
-    onOpenPvtTest: () -> Unit,
-    modifier: Modifier
-) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        // Cuadricula de 2 columnas con cuadros grandes (IndicatorTile)
-        indicators.chunked(2).forEach { pair ->
-            Row(
+private fun AttentionRow(indicator: VitalIndicator, onClick: () -> Unit) {
+    val accent = indicatorAccent(indicator.id)
+    Surface(color = SurfacePanel, shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .clickable(onClick = onClick)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    .size(40.dp)
+                    .background(accent.copy(alpha = 0.18f), CircleShape),
+                contentAlignment = Alignment.Center
             ) {
-                pair.forEach { indicator ->
-                    IndicatorTile(
-                        indicator = indicator,
-                        onClick = { onIndicatorClick(indicator.id) },
-                        onMeasure = { onOpenAssessment(indicator.id) },
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                    )
-                }
-                if (pair.size == 1) Spacer(Modifier.weight(1f))
+                Icon(indicatorIcon(indicator.id), contentDescription = null, tint = accent)
             }
+            Spacer(Modifier.width(12.dp))
+            Column(Modifier.weight(1f)) {
+                Text(indicator.name, color = TextPrimary, fontWeight = FontWeight.Bold)
+                Text("View countermeasure", color = TextSecondary, style = MaterialTheme.typography.bodySmall)
+            }
+            StatusBadge(displayLevel(indicator))
         }
-        Spacer(Modifier.height(8.dp))
-        PrimaryActionButton(text = "Prueba de reacción (PVT)", onClick = onOpenPvtTest)
     }
 }
 
-private fun environmentLabel(env: SpaceEnvironment): String = when (env) {
-    SpaceEnvironment.TRANSIT_MARS_0G -> "Tránsito a Marte 0 g"
-    SpaceEnvironment.LUNAR_BASE -> "Base lunar"
-    SpaceEnvironment.PRESSURIZED_ROVER -> "Rover presurizado"
+@Composable
+internal fun SectionTitle(text: String) {
+    Text(
+        text = text,
+        color = TextPrimary,
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold
+    )
 }
 
-private fun zoneLabel(zone: BodyZone): String = when (zone) {
-    BodyZone.HEAD_MIND -> "Cabeza / Mente"
-    BodyZone.THORAX_CARDIO -> "Tórax / Cardio"
-    BodyZone.METABOLIC_ENDOCRINE -> "Metabólico / Endocrino"
+@Composable
+internal fun InfoCard(text: String) {
+    Surface(color = SurfacePanel, shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
+        Text(text, color = TextSecondary, modifier = Modifier.padding(16.dp))
+    }
 }
 
-@Preview(name = "Telefono", showBackground = true, widthDp = 400, heightDp = 860)
-@Preview(name = "Tablet", showBackground = true, widthDp = 1000, heightDp = 600)
+@Preview(name = "Phone", showBackground = true, backgroundColor = 0xFF0B0F19, widthDp = 400, heightDp = 860)
 @Composable
 private fun DashboardScreenPreview() {
     SoftieCareTheme {
-        DashboardScreen({}, {}, {}, {})
+        Box(Modifier.background(SpaceBackground)) {
+            DashboardScreen({}, {}, {}, {})
+        }
     }
 }

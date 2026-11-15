@@ -34,18 +34,18 @@ fun SimulatorSheet(onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = SurfacePanel,
-        title = { Text("Simulador de escenarios", color = TextPrimary) },
+        title = { Text("Scenario simulator", color = TextPrimary) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("Selecciona un escenario para la demostracion", color = TextSecondary)
-                ScenarioButton("Nominal (restaurar)", StatusNormal) { inject(Scenario.NOMINAL) }
-                ScenarioButton("Pico de radiacion", StatusCritical) { inject(Scenario.RADIATION_SPIKE) }
-                ScenarioButton("Fatiga por aislamiento", StatusWarning) { inject(Scenario.ISOLATION_FATIGUE) }
+                Text("Select a scenario for the demo", color = TextSecondary)
+                ScenarioButton("Nominal (reset)", StatusNormal) { inject(Scenario.NOMINAL) }
+                ScenarioButton("Radiation spike", StatusCritical) { inject(Scenario.RADIATION_SPIKE) }
+                ScenarioButton("Isolation fatigue", StatusWarning) { inject(Scenario.ISOLATION_FATIGUE) }
             }
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cerrar", color = TextSecondary)
+                Text("Close", color = TextSecondary)
             }
         }
     )
